@@ -1,1 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admit Card Generator</title>
+  <!-- ✅ Required Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f4f9; margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; }
+    h1,h2{color:#222;text-align:center;}
+    #form-container{background:white;padding:25px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.1);width:100%;max-width:900px;margin-bottom:20px;}
+    .entry-toggle{display:flex;justify-content:center;margin-bottom:25px;}
+    .toggle-btn{flex:1;padding:14px;font-weight:bold;border:none;cursor:pointer;background:#2c3e50;color:#dcdcdc;}
+    .toggle-btn.active{background:#004e92;color:#fff;}
+    #auto-fill-section{padding:20px;border:2px dashed #4a90e2;border-radius:8px;background:#f9fbff;text-align:center;}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+    .form-group{display:flex;flex-direction:column;}
+    .form-group label{margin-bottom:5px;font-weight:bold;}
+    .form-group input,.form-group select{padding:10px;border:1px solid #ccc;border-radius:6px;}
+    .paper-entry{display:grid;grid-template-columns:1fr 2fr 1fr;gap:10px;margin-bottom:10px;background:#f4f9ff;padding:12px;border:1px solid #e1e9f5;border-radius:6px;}
+    .action-buttons{display:flex;justify-content:center;gap:20px;margin-top:25px;}
+    button{padding:12px 28px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+    #generateBtn{background:#004e92;color:white;}
+    #downloadBtn{background:#28a745;color:white;display:none;}
+    #addPaperBtn{background:#17a2b8;color:white;}
+    #admit-card-wrapper{width:100%;max-width:800px;margin-top:20px;padding:20px;background:white;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:none;}
+    #admit-card-content{border:2px solid black;padding:15px;}
+    .header{text-align:center;border-bottom:2px solid black;padding-bottom:10px;margin-bottom:10px;}
+    .sub-header{text-align:center;font-weight:bold;margin-bottom:10px;}
+    .details-table,.papers-table{width:100%;border-collapse:collapse;margin-top:10px;}
+    .details-table td{padding:5px;}
+    .papers-table th,.papers-table td{border:1px solid black;padding:6px;font-size:12px;}
+    .papers-table th{background:#f2f2f2;}
+    .footer-note{text-align:center;font-size:12px;margin-top:10px;font-weight:bold;}
+  </style>
+</head>
+<body>
+  <div id="form-container">
+    <h1>Admit Card Generator</h1>
+    <div class="entry-toggle">
+      <button class="toggle-btn active" id="manualBtn">Manual Entry</button>
+      <button class="toggle-btn" id="autoBtn">Auto-fill from Upload</button>
+    </div>
+
+    <!-- Manual Entry -->
+    <div id="manual-form">
+      <form>
+        <h2>Student Details</h2>
+        <div class="form-grid">
+          <div class="form-group"><label>Candidate Name:</label><input id="candidateName"></div>
+          <div class="form-group"><label>Father's Name:</label><input id="fatherName"></div>
+          <div class="form-group"><label>Mother's Name:</label><input id="motherName"></div>
+          <div class="form-group"><label>Roll Number:</label><input id="rollNumber"></div>
+          <div class="form-group"><label>Enrollment Number:</label><input id="enrollmentNumber"></div>
+          <div class="form-group"><label>Course:</label><input id="course"></div>
+          <div class="form-group"><label>Gender:</label><select id="gender"><option>FEMALE</option><option>MALE</option></select></div>
+          <div class="form-group"><label>Semester:</label><select id="semester"><option>1</option><option>2</option><option>3</option></select></div>
+          <div class="form-group"><label>Exam Type:</label><select id="examType"><option>MAIN EXAM</option><option>BACK EXAM</option></select></div>
+          <div class="form-group"><label>College Name:</label><input id="collegeName"></div>
+          <div class="form-group"><label>Exam Center:</label><input id="examCenter"></div>
+          <div class="form-group"><label>Main Subject:</label><input id="subject"></div>
+        </div>
+        <h2>Papers</h2>
+        <div id="paper-entries"></div>
+        <button type="button" id="addPaperBtn">Add Paper</button>
+      </form>
+    </div>
+
+    <!-- Auto Fill -->
+    <div id="auto-fill-section" style="display:none;">
+      <label>Upload Admit Card to Auto-Fill</label>
+      <input type="file" id="admitCardUpload" accept=".pdf,.png,.jpg,.jpeg">
+      <p id="upload-status"></p>
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <button id="generateBtn">GET Admit Card</button>
+    <button id="downloadBtn">Download as PDF</button>
+  </div>
+
+  <!-- Generated Admit Card -->
+  <div id="admit-card-wrapper">
+    <div id="admit-card-content">
+      <div class="header">
+        <img src="https://i.ibb.co/nMC0877T/UNIVERSITY-UPDATES-LOGO-removebg-preview.png" style="height:60px;">
+        <h3>University Updates</h3>
+      </div>
+      <div class="sub-header"><h4>PROVISIONAL ADMIT CARD</h4></div>
+      <p id="exam-type-sem" style="text-align:center;font-weight:bold;"></p>
+      <table class="details-table">
+        <tr><td>Roll Number:</td><td id="ac-rollNumber"></td><td>Enrollment No:</td><td id="ac-enrollmentNumber"></td></tr>
+        <tr><td>Candidate Name:</td><td id="ac-candidateName"></td><td>Father's/Mother's Name:</td><td id="ac-fatherMotherName"></td></tr>
+        <tr><td>Course:</td><td id="ac-course"></td><td>Gender:</td><td id="ac-gender"></td></tr>
+        <tr><td>College:</td><td id="ac-collegeName"></td><td>Exam Center:</td><td id="ac-examCenter"></td></tr>
+        <tr><td>Subject:</td><td colspan="3" id="ac-subject"></td></tr>
+      </table>
+      <table class="papers-table" id="ac-papers-table">
+        <thead><tr><th>PAPER</th><th>CODE</th><th>NAME</th><th>TYPE</th><th>DATE</th><th>DAY</th><th>SHIFT</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="footer-note">NOTE: Verify dates on www.ccsuniversity.ac.in</p>
+    </div>
+  </div>
+
+  <!-- Admin Login -->
+  <div style="margin-top:30px;text-align:center;">
+    <button id="adminLoginBtn">🔑 Admin Login</button>
+  </div>
+  <div id="admin-panel" style="display:none;margin-top:20px;padding:15px;border:2px solid #333;border-radius:8px;">
+    <h2>Admin Panel</h2>
+    <label>Upload Master Datesheet</label>
+    <input type="file" id="masterUpload" accept=".pdf,.png,.jpg,.jpeg">
+    <p id="master-status"></p>
+    <button type="button" onclick="clearDatesheet()">❌ Clear Stored Datesheet</button>
+  </div>
+
+<script>
+// ================= UTILITIES =================
+function normalize(s){return s.toLowerCase().replace(/[^a-z0-9]/g,'');}
+let examDatesheet={},examDatesheetByName={};
+
+// ================= FORM HANDLING =================
+const paperEntriesContainer=document.getElementById('paper-entries');
+function addPaperEntry(p={code:'',name:'',type:''}){const d=document.createElement('div');d.className='paper-entry';d.innerHTML=`<input value="${p.code}" placeholder="Code"><input value="${p.name}" placeholder="Name"><input value="${p.type}" placeholder="Type">`;paperEntriesContainer.appendChild(d);}
+document.getElementById('addPaperBtn').addEventListener('click',()=>addPaperEntry());
+
+// Toggle Manual/Auto
+document.getElementById('manualBtn').addEventListener('click',()=>{document.getElementById('manual-form').style.display='block';document.getElementById('auto-fill-section').style.display='none';});
+document.getElementById('autoBtn').addEventListener('click',()=>{document.getElementById('manual-form').style.display='none';document.getElementById('auto-fill-section').style.display='block';});
+
+// ================= ADMIT CARD OCR =================
+document.getElementById('admitCardUpload').addEventListener('change',async e=>{
+ if(!e.target.files.length)return;const f=e.target.files[0],s=document.getElementById('upload-status');s.textContent='Processing...';
+ try{const {data:{text}}=await Tesseract.recognize(f,'eng');console.log("OCR:",text);
+ const papers=[];const r=/([A-Z0-9]{5,})\s+([A-Za-z0-9 ,&\-()]+)\s+(Theory|Practical)/gi;let m;while((m=r.exec(text))!==null){papers.push({code:m[1],name:m[2],type:m[3]});}
+ paperEntriesContainer.innerHTML='';papers.forEach(p=>addPaperEntry(p));s.textContent=`Extracted ${papers.length} papers ✔`;
+ }catch(err){s.textContent='OCR Failed';}
+});
+
+// ================= ADMIN DATESHEET =================
+const ADMIN_PASSWORD="ccsuAdmin2025";
+document.getElementById('adminLoginBtn').addEventListener('click',()=>{const p=prompt("Enter Admin Password:");if(p===ADMIN_PASSWORD){document.getElementById('admin-panel').style.display='block';alert("Welcome Admin");}else alert("❌ Wrong Password");});
+document.getElementById('masterUpload').addEventListener('change',handleMasterUpload);
+async function handleMasterUpload(e){
+ if(!e.target.files.length)return;const f=e.target.files[0],s=document.getElementById('master-status');s.textContent='Parsing...';
+ let t='';if(f.type==='application/pdf'){const ab=await f.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();t+=c.items.map(it=>it.str).join(' ')+'\n';}}else{const {data:{text}}=await Tesseract.recognize(f,'eng');t=text;}
+ examDatesheet={};examDatesheetByName={};const r=/([A-Z0-9]{6,})\s+([A-Za-z0-9 ,&\-()]+)\s+(Theory|Practical)\s+(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\s+([A-Za-z]+)\s+(Shift\s*\w+)\s+([\d: ]+(?:AM|PM).+)/gi;let m;
+ while((m=r.exec(t))!==null){const o={code:m[1],name:m[2],type:m[3],date:m[4],day:m[5],shift:m[6],time:m[7]};examDatesheet[m[1]]=o;examDatesheetByName[normalize(m[2])]=o;}
+ localStorage.setItem("examDatesheet",JSON.stringify(examDatesheet));localStorage.setItem("examDatesheetByName",JSON.stringify(examDatesheetByName));
+ s.textContent=`✅ Stored ${Object.keys(examDatesheet).length} papers`;}
+// Load stored
+window.addEventListener("load",()=>{if(localStorage.examDatesheet){examDatesheet=JSON.parse(localStorage.examDatesheet);examDatesheetByName=JSON.parse(localStorage.examDatesheetByName);console.log("Loaded datesheet");}});
+function clearDatesheet(){localStorage.clear();examDatesheet={};examDatesheetByName={};alert("Cleared!");}
+
+// ================= GENERATE ADMIT CARD =================
+document.getElementById('generateBtn').addEventListener('click',()=>{
+ if(!Object.keys(examDatesheet).length){alert("❌ Master Datesheet not uploaded yet. Ask admin.");return;}
+ const roll=document.getElementById('rollNumber').value,cand=document.getElementById('candidateName').value;if(!roll||!cand){alert("Fill Name & Roll");return;}
+ document.getElementById('ac-rollNumber').innerText=roll;document.getElementById('ac-candidateName').innerText=cand;
+ const tbody=document.querySelector("#ac-papers-table tbody");tbody.innerHTML='';
+ document.querySelectorAll('.paper-entry').forEach((r,i)=>{const code=r.children[0].value.toUpperCase(),name=r.children[1].value.toUpperCase(),type=r.children[2].value;let info=examDatesheet[code]||examDatesheetByName[normalize(name)]||{};let tr=`<tr><td>${i+1}</td><td>${code}</td><td>${name}</td><td>${type}</td>`;tr+=info.date?`<td>${info.date}</td><td>${info.day}</td><td>${info.shift} (${info.time})</td>`:`<td colspan="3">Check Website</td>`;tr+='</tr>';tbody.innerHTML+=tr;});
+ document.getElementById('admit-card-wrapper').style.display='block';document.getElementById('downloadBtn').style.display='inline-block';
+});
+// Download
+document.getElementById('downloadBtn').addEventListener('click',()=>{html2pdf().set({filename:"AdmitCard.pdf",image:{type:'jpeg',quality:0.98},html2canvas:{scale:2},jsPDF:{unit:'in',format:'a4'}}).from(document.getElementById('admit-card-content')).save();});
+</script>
+</body>
+</html>
 

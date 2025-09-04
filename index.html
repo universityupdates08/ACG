@@ -111,12 +111,18 @@
     <button id="adminLoginBtn">🔑 Admin Login</button>
   </div>
   <div id="admin-panel" style="display:none;margin-top:20px;padding:15px;border:2px solid #333;border-radius:8px;">
-    <h2>Admin Panel</h2>
-    <label>Upload Master Datesheet</label>
-    <input type="file" id="masterUpload" accept=".pdf,.png,.jpg,.jpeg">
-    <p id="master-status"></p>
-    <button type="button" onclick="clearDatesheet()">❌ Clear Stored Datesheet</button>
-  </div>
+  <h2>Admin Panel</h2>
+  <label>Upload Master Datesheet</label>
+  <input type="file" id="masterUpload" accept=".pdf,.png,.jpg,.jpeg">
+  <p id="master-status"></p>
+  <button type="button" onclick="exportDatesheet()">⬇ Export Datesheet JSON</button>
+  <br><br>
+  <label>Import Datesheet JSON</label>
+  <input type="file" id="importJson" accept=".json">
+  <br><br>
+  <button type="button" onclick="clearDatesheet()">❌ Clear Stored Datesheet</button>
+</div>
+
 
 <script>
 // ================= UTILITIES =================
@@ -155,6 +161,39 @@ async function handleMasterUpload(e){
 // Load stored
 window.addEventListener("load",()=>{if(localStorage.examDatesheet){examDatesheet=JSON.parse(localStorage.examDatesheet);examDatesheetByName=JSON.parse(localStorage.examDatesheetByName);console.log("Loaded datesheet");}});
 function clearDatesheet(){localStorage.clear();examDatesheet={};examDatesheetByName={};alert("Cleared!");}
+// --- Export Datesheet to JSON ---
+function exportDatesheet() {
+  if (!Object.keys(examDatesheet).length) {
+    alert("❌ No datesheet found to export.");
+    return;
+  }
+  const blob = new Blob([JSON.stringify({examDatesheet, examDatesheetByName}, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "datesheet.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  alert("✅ Datesheet exported as JSON file.");
+}
+
+// --- Import Datesheet from JSON ---
+document.getElementById("importJson").addEventListener("change", async (e) => {
+  if (!e.target.files.length) return;
+  const file = e.target.files[0];
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    examDatesheet = data.examDatesheet || {};
+    examDatesheetByName = data.examDatesheetByName || {};
+    localStorage.setItem("examDatesheet", JSON.stringify(examDatesheet));
+    localStorage.setItem("examDatesheetByName", JSON.stringify(examDatesheetByName));
+    alert(`✅ Imported Datesheet JSON (${Object.keys(examDatesheet).length} papers)`);
+  } catch (err) {
+    alert("❌ Invalid JSON file.");
+    console.error(err);
+  }
+});
 
 // ================= GENERATE ADMIT CARD =================
 document.getElementById('generateBtn').addEventListener('click',()=>{

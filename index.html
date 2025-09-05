@@ -110,7 +110,7 @@
             <select id="gender"><option value="FEMALE">FEMALE</option><option value="MALE">MALE</option><option value="OTHER">OTHER</option></select>
           </div>
           <div class="form-group"><label for="semester">Semester:</label>
-            <select id="semester"><option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option><option value="4">4th</option><option value="5">5th</option><option value="6">6th</option></select>
+            <select id="semester"><option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option><option value="4">4th</option><option value="5">5th</option><option value="6">6th</option><option value="7">7th</option><option value="8">8th</option><option value="9">9th</option><option value="10">10th</option></select>
           </div>
           <div class="form-group"><label for="examType">Exam Type:</label>
             <select id="examType"><option value="MAIN EXAM">Main</option><option value="BACK EXAM">Back</option><option value="EX-STUDENT EXAM">Ex-Student</option></select>
@@ -137,7 +137,7 @@
 
   <!-- Action buttons -->
   <div class="action-buttons">
-    <button type="button" id="generateBtn">GET Admit Card</button>
+    <button type="button" id="generateBtn">Get Admit Card</button>
     <button type="button" id="downloadBtn" style="display:none;">Download as PDF</button>
   </div>
 
@@ -149,8 +149,16 @@
         <h3>University Updates</h3>
         <div class="header-right"></div>
       </div>
-      <div class="sub-header"><h4>औपबंधिक प्रवेश-पत्र / PROVISIONAL ADMIT CARD</h4></div>
-      <p id="exam-type-sem" style="text-align:center; font-weight:bold; margin-bottom:15px;">COLLEGE EXAMINATION/MAIN EXAM/4'TH SEMESTER: JUNE-2025</p>
+      <div class="sub-header" style="text-align:center; margin-bottom:10px;">
+  <h4 style="font-weight:bold; font-size:18px;">
+    औपबंधिक प्रवेश-पत्र / PROVISIONAL ADMIT CARD
+  </h4>
+</div>
+
+<p id="exam-type-sem" style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:15px;">
+  COLLEGE EXAMINATION / MAIN EXAM / <span id="current-sem" style="color:#d32f2f;"></span> : JUNE-2025
+</p>
+
       <table class="details-table">
         <tr><td class="label">Roll Number:</td><td class="value" id="ac-rollNumber"></td><td class="label">Enrollment No:</td><td class="value" id="ac-enrollmentNumber"></td></tr>
         <tr><td class="label">Candidate Name:</td><td class="value" id="ac-candidateName"></td><td class="label">Father's/Mother's Name:</td><td class="value" id="ac-fatherMotherName"></td></tr>
@@ -260,6 +268,17 @@
             data.papers.forEach(addPaperEntry);
         }
 
+  // ✅ You can change this value as per requirement
+  const semester = "4th SEMESTER";
+  const examMonthYear = "JUNE-2025";
+
+  // Insert semester dynamically
+  document.getElementById("current-sem").textContent = `CURRENT SEMESTER (${semester})`;
+
+  // Optionally update full line (if needed)
+  document.getElementById("exam-type-sem").innerHTML =
+    `COLLEGE EXAMINATION / MAIN EXAM / <span style="color:#d32f2f;">CURRENT SEMESTER (${semester})</span> : ${examMonthYear}`;
+    
         // --- ADMIT CARD GENERATION (Form se data lekar card banane ke liye) ---
         document.getElementById('generateBtn').addEventListener('click', () => {
             const candidateName = document.getElementById('candidateName').value, fatherName = document.getElementById('fatherName').value,

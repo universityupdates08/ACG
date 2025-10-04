@@ -6,7 +6,7 @@
   <title>Admit Card Generator</title>
   <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Icons -->
+  <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,39 +15,7 @@
     html,body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; background:#f8fafc; color:var(--ink);} 
     .glass{ background:rgba(255,255,255,.8); backdrop-filter: blur(10px);} 
     .scrollbar-hide::-webkit-scrollbar{ display:none; }
-  </style>
-  <!-- html2pdf.js for HQ PDF export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" defer></script>
-  <!-- PDF.js for text extraction + image fallback -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
-  <script>
-    // Configure the worker for pdf.js
-    if (window['pdfjsLib']) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js';
-    }
-  </script>
-  <!-- Tesseract.js for OCR (images / scanned PDFs) -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <!-- Day.js for date formatting -->
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-</head>
-<body>
-<header class="w-full border-b bg-white/70 sticky top-0 z-30"> 
-  <div class="max-w-6xl mx-auto flex items-center justify-center p-4">
-    <div class="flex items-center gap-3">
-      <img src="https://i.ibb.co/nMC0877T/UNIVERSITY-UPDATES-LOGO-removebg-preview.png" 
-           alt="Logo" 
-           class="h-10 w-auto"/>
-      <h1 class="text-xl md:text-2xl font-bold tracking-tight">
-        Admit Card Generator
-      </h1>
-    </div>
-  </div>
-</header>
-
-  
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    /* Custom styles for the admit card layout */
     h1, h2 { color: #333; text-align: center; }
     #form-container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; max-width: 900px; margin-bottom: 20px; }
     .entry-toggle { display: flex; justify-content: center; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; }
@@ -60,49 +28,76 @@
     .form-group label { margin-bottom: 5px; font-weight: bold; color: #555; }
     .form-group input, .form-group select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
     #papers-container { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
-    .paper-entry { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 10px; align-items: center; margin-bottom: 10px; background: #f9f9f9; padding: 10px; border-radius: 4px; }
+    .paper-entry { display: grid; grid-template-columns: 1fr 2fr 1fr 40px; gap: 10px; align-items: center; margin-bottom: 10px; background: #f9f9f9; padding: 10px; border-radius: 4px; }
     .action-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
     button { padding: 12px 25px; border: none; border-radius: 5px; background-color: #007BFF; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
     button:hover { background-color: #0056b3; }
     #downloadBtn { background-color: #28a745; }
     #downloadBtn:hover { background-color: #1e7e34; }
-    #admit-card-wrapper { width: 100%; max-width: 800px; margin-top: 20px; padding: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    #admit-card-wrapper { width: 100%; max-width: 800px; margin-top: 20px; padding: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 8px; }
     #admit-card-content { border: 2px solid black; padding: 15px; }
     .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 10px; }
     .header img { height: 60px; width: auto; }
     .header h3 { flex: 1; text-align: center; margin: 0; font-size: 20px; }
     .header-right { width: 60px; }
-    .header p { margin: 5px 0; text-align: center; flex-basis: 100%; }
     .sub-header { text-align: center; font-weight: bold; padding: 5px 0; margin-bottom: 10px; }
     .sub-header h4 { margin: 0; padding: 5px 10px; border: 1px solid black; border-radius: 5px; display: inline-block; }
     .details-table { width: 100%; margin-top: 10px; border-collapse: collapse; }
-    .details-table td { padding: 5px; font-size: 14px; }
-    .details-table .label { font-weight: bold; width: 20%; }
-    .details-table .value { width: 30%; }
+    .details-table td { padding: 5px; font-size: 14px; vertical-align: top; }
+    .details-table .label { font-weight: bold; width: 25%; }
     .papers-table { width: 100%; margin-top: 15px; border-collapse: collapse; font-size: 12px; }
     .papers-table th, .papers-table td { border: 1px solid black; padding: 6px; text-align: left; }
     .papers-table th { background-color: #f2f2f2; font-weight: bold; }
     .footer-note { font-size: 12px; margin-top: 10px; font-weight: bold; }
   </style>
+
+  <!-- html2pdf.js for HQ PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" defer></script>
+  <!-- PDF.js for text extraction + image fallback -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</script>
+  <!-- Tesseract.js for OCR (images / scanned PDFs) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <!-- Day.js for date formatting -->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 </head>
-<body>
+<body class="flex flex-col items-center">
+<header class="w-full border-b bg-white/70 sticky top-0 z-30 shadow-lg"> 
+  <div class="max-w-6xl mx-auto flex items-center justify-center p-4">
+    <div class="flex items-center gap-3">
+      <!-- Placeholder logo, replace with a better one if available -->
+      <img src="https://i.ibb.co/nMC0877T/UNIVERSITY-UPDATES-LOGO-removebg-preview.png" 
+           alt="Logo" 
+           class="h-10 w-auto rounded-full"/>
+      <h1 class="text-xl md:text-2xl font-bold tracking-tight text-gray-800">
+        Admit Card Generator
+      </h1>
+    </div>
+  </div>
+</header>
 
   <!-- FORM -->
-  <div id="form-container">
-    <h1>Admit Card Generator</h1>
-    <div class="entry-toggle">
-      <button class="toggle-btn active" id="manualBtn">Manual Entry</button>
-      <button class="toggle-btn" id="autoBtn">Auto-fill from Upload</button>
+  <div id="form-container" class="mt-8">
+    <h1 class="text-3xl font-extrabold mb-4">Exam Details Form</h1>
+    <div class="entry-toggle shadow-md">
+      <button class="toggle-btn active rounded-l-md" id="manualBtn">Manual Entry</button>
+      <button class="toggle-btn rounded-r-md" id="autoBtn">Auto-fill from Upload</button>
+    </div>
+
+    <!-- Auto-fill Section (Initially hidden) -->
+    <div id="auto-fill-section" style="display:none;" class="bg-blue-50 border-blue-200">
+      <label for="admitCardUpload" class="text-blue-700">Upload Admit Card (PDF/Image) to Auto-Fill Details</label>
+      <input type="file" id="admitCardUpload" accept=".pdf,.png,.jpg,.jpeg" class="mt-4 p-2 border border-gray-300 rounded-md w-full max-w-sm mx-auto block">
+      <p id="upload-status" class="mt-3 text-blue-600 font-semibold"></p>
     </div>
 
     <!-- Manual Entry -->
     <div id="manual-form">
       <form id="admitCardForm">
-        <h2>Student Details</h2>
+        <h2 class="text-xl font-semibold mb-4 border-b pb-2">Student Details</h2>
         <div class="form-grid">
           <div class="form-group"><label for="candidateName">Candidate Name:</label><input type="text" id="candidateName" required></div>
-          <div class="form-group"><label for="fatherName">Father's Name:</label><input type="text" id="fatherName" required></div>
-          <div class="form-group"><label for="motherName">Mother's Name:</label><input type="text" id="motherName" required></div>
+          <div class="form-group"><label for="fatherMotherName">Father's/Mother's Name:</label><input type="text" id="fatherMotherName" required></div>
           <div class="form-group"><label for="rollNumber">Roll Number:</label><input type="text" id="rollNumber" required></div>
           <div class="form-group"><label for="enrollmentNumber">Enrollment Number:</label><input type="text" id="enrollmentNumber" required></div>
           <div class="form-group"><label for="course">Course:</label><input type="text" id="course" required></div>
@@ -116,54 +111,53 @@
             <select id="examType"><option value="MAIN EXAM">Main</option><option value="BACK EXAM">Back</option><option value="EX-STUDENT EXAM">Ex-Student</option></select>
           </div>
           <div class="form-group"><label for="collegeName">College Name:</label><input type="text" id="collegeName" required></div>
-          <div class="form-group"><label for="examCenter">Examination Center:</label><input type="text" id="examCenter" required></div>
+          <div class="form-group"><label for="examinationCenter">Examination Center:</label><input type="text" id="examinationCenter" required></div>
           <div class="form-group"><label for="subject">Main Subject:</label><input type="text" id="subject" required></div>
         </div>
         <div id="papers-container">
-          <h2>Paper Details</h2>
-          <div id="paper-entries"></div>
-          <button type="button" id="addPaperBtn" style="background-color:#17a2b8; margin-top:10px;">Add Paper</button>
+          <h2 class="text-xl font-semibold mb-4 mt-8 border-b pb-2">Paper Details</h2>
+          <div id="paper-entries">
+            <!-- Default paper entry added by JS init -->
+          </div>
+          <button type="button" id="addPaperBtn" class="bg-indigo-600 hover:bg-indigo-700 text-sm py-2 px-4 rounded-full shadow-md" style="margin-top:10px;">+ Add Paper</button>
         </div>
       </form>
-    </div>
-
-    <!-- Auto-fill -->
-    <div id="auto-fill-section" style="display:none;">
-      <label for="admitCardUpload">Upload Admit Card to Auto-Fill Details</label>
-      <input type="file" id="admitCardUpload" accept=".pdf,.png,.jpg,.jpeg">
-      <p id="upload-status" style="color: #007BFF; font-weight: bold;"></p>
     </div>
   </div>
 
   <!-- Action buttons -->
   <div class="action-buttons">
-    <button type="button" id="generateBtn">Get Admit Card</button>
-    <button type="button" id="downloadBtn" style="display:none;">Download as PDF</button>
+    <button type="button" id="generateBtn" class="shadow-lg hover:shadow-xl">Generate Admit Card</button>
+    <button type="button" id="downloadBtn" class="shadow-lg hover:shadow-xl" style="display:none;">Download as PDF</button>
   </div>
 
-  <!-- ADMIT CARD -->
+  <!-- ADMIT CARD PREVIEW -->
   <div id="admit-card-wrapper" style="display:none;">
     <div id="admit-card-content">
       <div class="header">
-        <img src="https://i.ibb.co/nMC0877T/UNIVERSITY-UPDATES-LOGO-removebg-preview.png" alt="Logo">
-        <h3>University Updates</h3>
+        <img src="https://i.ibb.co/nMC0877T/UNIVERSITY-UPDATES-LOGO-removebg-preview.png" alt="University Logo">
+        <h3>Chaudhary Charan Singh University, Meerut, U.P.</h3>
         <div class="header-right"></div>
       </div>
+      <p style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:5px;">
+          (Formerly, Meerut University) | NAAC A++ Accredited
+      </p>
       <div class="sub-header" style="text-align:center; margin-bottom:10px;">
-  <h4 style="font-weight:bold; font-size:18px;">
-    औपबंधिक प्रवेश-पत्र / PROVISIONAL ADMIT CARD
-  </h4>
-</div>
+        <h4 style="font-weight:bold; font-size:16px;">
+          औपबंधिक प्रवेश-पत्र / PROVISIONAL ADMIT CARD
+        </h4>
+      </div>
 
-<p id="exam-type-sem" style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:15px;">
-  COLLEGE EXAMINATION / MAIN EXAM / <span id="current-sem" style="color:#d32f2f;"></span> : JUNE-2025
-</p>
+      <p id="exam-type-sem" style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:15px; color:#d32f2f;">
+        <!-- Filled by JS -->
+      </p>
 
       <table class="details-table">
         <tr><td class="label">Roll Number:</td><td class="value" id="ac-rollNumber"></td><td class="label">Enrollment No:</td><td class="value" id="ac-enrollmentNumber"></td></tr>
         <tr><td class="label">Candidate Name:</td><td class="value" id="ac-candidateName"></td><td class="label">Father's/Mother's Name:</td><td class="value" id="ac-fatherMotherName"></td></tr>
         <tr><td class="label">Course:</td><td class="value" id="ac-course"></td><td class="label">Gender:</td><td class="value" id="ac-gender"></td></tr>
-        <tr><td class="label">College Name:</td><td class="value" id="ac-collegeName"></td><td class="label">Exam Center:</td><td class="value" id="ac-examCenter"></td></tr>
+        <tr><td class="label">College Name:</td><td class="value" id="ac-collegeName" colspan="3"></td></tr>
+        <tr><td class="label">Examination Center:</td><td class="value" id="ac-examinationCenter" colspan="3"></td></tr>
         <tr><td class="label">Subject:</td><td class="value" colspan="3" id="ac-subject"></td></tr>
       </table>
       <table class="papers-table" id="ac-papers-table">
@@ -178,162 +172,329 @@
     </div>
   </div>
 
-     <script>
-        // --- DATA (Datesheet wagerah yahan hai) ---
-        const examDatesheet = { 'C010401T': { date: '29-Apr-2025', day: 'Tuesday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 'C010402T': { date: '02-May-2025', day: 'Friday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 'C010404T': { date: '03-May-2025', day: 'Saturday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 'C010403P': { date: 'N/A', day: 'N/A', shift: 'N/A' }, 'Q10021': { date: '22-May-2025', day: 'Thursday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 'V0001015P': { date: 'N/A', day: 'N/A', shift: 'N/A' }, 'V0001015T': { date: 'N/A', day: 'N/A', shift: 'N/A' }, 'Z040401': { date: '20-May-2025', day: 'Tuesday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 'A040201T': { date: '28-Apr-2025', day: 'Monday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 'C010201T': { date: '28-Apr-2025', day: 'Monday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 'A040401T': { date: '29-Apr-2025', day: 'Tuesday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 'C010202T': { date: '30-Apr-2025', day: 'Wednesday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 'A050401T': { date: '02-May-2025', day: 'Friday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 'Z020201': { date: '19-May-2025', day: 'Monday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 'Z060601': { date: '20-May-2025', day: 'Tuesday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' } };
+  <script>
+    // --- DATA (Datesheet for fetching Date, Day, and Shift) ---
+    const examDatesheet = { 
+        'C010401T': { date: '29-Apr-2025', day: 'Tuesday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 
+        'C010402T': { date: '02-May-2025', day: 'Friday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 
+        'C010404T': { date: '03-May-2025', day: 'Saturday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 
+        'C010403P': { date: 'N/A', day: 'N/A', shift: 'N/A' }, // Practical - Date decided by college
+        'Q10021': { date: '22-May-2025', day: 'Thursday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 
+        'V0001015P': { date: 'N/A', day: 'N/A', shift: 'N/A' }, // Practical/Vocational
+        'V0001015T': { date: '23-May-2025', day: 'Friday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, // Assuming T means Theory
+        'Z040401': { date: '20-May-2025', day: 'Tuesday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 
+        'A040201T': { date: '28-Apr-2025', day: 'Monday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 
+        'C010201T': { date: '28-Apr-2025', day: 'Monday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 
+        'A040401T': { date: '29-Apr-2025', day: 'Tuesday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 
+        'C010202T': { date: '30-Apr-2025', day: 'Wednesday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' }, 
+        'A050401T': { date: '02-May-2025', day: 'Friday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 
+        'Z020201': { date: '19-May-2025', day: 'Monday', shift: 'Shift 1 (8:00 AM - 11:00 AM)' }, 
+        'Z060601': { date: '20-May-2025', day: 'Tuesday', shift: 'Shift 2 (11:00 AM - 2:00 PM)' } 
+    };
 
-        const paperEntriesContainer = document.getElementById('paper-entries');
-        const manualBtn = document.getElementById('manualBtn');
-        const autoBtn = document.getElementById('autoBtn');
-        const manualForm = document.getElementById('manual-form');
-        const autoFillSection = document.getElementById('auto-fill-section');
+    const paperEntriesContainer = document.getElementById('paper-entries');
 
-        // --- UI TOGGLE (Manual aur Auto ke beech switch karne ke liye) ---
-        manualBtn.addEventListener('click', () => { manualForm.style.display = 'block'; autoFillSection.style.display = 'none'; manualBtn.classList.add('active'); autoBtn.classList.remove('active'); });
-        autoBtn.addEventListener('click', () => { manualForm.style.display = 'none'; autoFillSection.style.display = 'block'; manualBtn.classList.remove('active'); autoBtn.classList.add('active'); });
+    // --- INITIALIZATION ---
+    // Add one default paper row on load
+    window.onload = () => addPaperEntry();
 
-        // --- FORM HANDLING (Naya paper add karne ke liye) ---
-        function addPaperEntry(paper = { code: '', name: '', type: '' }) {
-            const div = document.createElement('div');
-            div.className = 'paper-entry';
-            div.innerHTML = `<input type="text" placeholder="Paper Code" value="${paper.code}" required> <input type="text" placeholder="Paper Name" value="${paper.name}" required> <input type="text" placeholder="Paper Type" value="${paper.type}" required>`;
-            paperEntriesContainer.appendChild(div);
+    // --- TOGGLE MANUAL / AUTO MODE ---
+    document.getElementById('manualBtn').addEventListener('click', () => {
+      document.getElementById('manual-form').style.display = 'block';
+      document.getElementById('auto-fill-section').style.display = 'none';
+      document.getElementById('manualBtn').classList.add('active');
+      document.getElementById('autoBtn').classList.remove('active');
+    });
+    document.getElementById('autoBtn').addEventListener('click', () => {
+      document.getElementById('manual-form').style.display = 'none';
+      document.getElementById('auto-fill-section').style.display = 'block';
+      document.getElementById('manualBtn').classList.remove('active');
+      document.getElementById('autoBtn').classList.add('active');
+    });
+
+    // --- ADD/REMOVE PAPER ROW ---
+    function addPaperEntry(paper = { code: '', name: '', type: '' }) {
+      const div = document.createElement('div');
+      div.className = 'paper-entry';
+      div.innerHTML = `
+        <input type="text" placeholder="Paper Code (C010401T)" value="${paper.code}" required>
+        <input type="text" placeholder="Paper Name" value="${paper.name}" required>
+        <input type="text" placeholder="Paper Type (Theory, Practical)" value="${paper.type}" required>
+        <button type="button" class="remove-paper-btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-1 rounded-full text-xs" title="Remove Paper">X</button>`;
+      
+      div.querySelector('.remove-paper-btn').addEventListener('click', () => {
+        if(paperEntriesContainer.children.length > 1) {
+            paperEntriesContainer.removeChild(div);
+        } else {
+            // Use a custom message instead of alert()
+            showFloatingMessage('Cannot remove the last paper entry.', 'bg-yellow-500');
         }
-        document.getElementById('addPaperBtn').addEventListener('click', () => addPaperEntry());
+      });
+      paperEntriesContainer.appendChild(div);
+    }
 
-        // --- File Upload Handling ---
-        document.getElementById('admitCardUpload').addEventListener('change', handleFileUpload);
+    document.getElementById('addPaperBtn').addEventListener('click', () => addPaperEntry());
+
+    // --- FILE UPLOAD + OCR EXTRACTION ---
+    document.getElementById('admitCardUpload').addEventListener('change', handleFileUpload);
+
+    async function handleFileUpload(event) {
+      const file = event.target.files[0];
+      const status = document.getElementById('upload-status');
+      if (!file) return;
+      status.textContent = 'Extracting text... please wait.';
+
+      let extractedText = '';
+      try {
+        if (file.type === 'application/pdf') {
+          extractedText = await extractTextFromPDF(file);
+        } else if (file.type.startsWith('image/')) {
+          extractedText = await extractTextFromImage(file);
+        }
+      } catch (e) {
+        console.error('Extraction Error:', e);
+        status.textContent = 'Error reading file. Check console for details.';
+        return;
+      }
+
+      if (!extractedText.trim()) {
+        status.textContent = 'No readable text found.';
+        return;
+      }
+
+      // Try to detect common fields
+      const extractedData = parseExamFormText(extractedText);
+      fillFormWithData(extractedData);
+      status.textContent = '✅ Data fetched successfully! Switch to Manual Entry to review.';
+    }
+
+    // --- TEXT EXTRACTION HELPERS (Unchanged and working) ---
+    async function extractTextFromPDF(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let text = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        // Use a more structured join to retain some spacing
+        const strings = content.items.map(item => item.str).join(' ');
+        text += strings + '\n';
+      }
+      return text;
+    }
+
+    async function extractTextFromImage(file) {
+      const status = document.getElementById('upload-status');
+      status.textContent = '🔍 Scanning image... (this may take 10–20 sec)';
+      const result = await Tesseract.recognize(file, 'eng', {
+        logger: info => status.textContent = `Scanning: ${Math.round(info.progress*100)}%`
+      });
+      return result.data.text;
+    }
+
+    // --- IMPROVED TEXT PARSER TO FIX FETCHING ISSUES ---
+    function parseExamFormText(text) {
+        const cleanText = text.replace(/[\r\n]+/g, ' ').replace(/\s{2,}/g, ' ').toUpperCase();
         
-        function handleFileUpload(event) {
-            if (!event.target.files || event.target.files.length === 0) { return; }
-            const status = document.getElementById('upload-status');
-            status.textContent = 'Processing...';
+        const getMatch = (pattern) => {
+          // Use [^,]+? to match non-comma characters non-greedily, or [\s\S]*? for multiline
+            const match = cleanText.match(pattern);
+            if (match && match[1]) {
+                return match[1].trim().replace(/\s+/g, ' ');
+            }
+            return '';
+        };
 
-            // ==============================================================================
-            // YAHAN ASLI FIX KARNA HOGA - Yeh abhi bhi FAKE/SIMULATED data hi use kar raha hai
-            // ==============================================================================
+        // Improved Regexes: Use [\s\S] to match across newlines in the raw text output
+        return {
+            candidateName: getMatch(/CANDIDATE\s*NAME[:\-\n\s]*?([\s\S]*?)(?=FATHER'?S|ROLL|COURSE)/i),
+            // FIX: Made this more flexible for capturing names with slashes
+            fatherMotherName: getMatch(/FATHER'?S\s*[\/\\]?\s*MOTHER'?S\s*NAME[:\-\n\s]*?([\s\S]*?)(?=ROLL|COURSE|GENDER)/i),
+            rollNumber: getMatch(/ROLL\s*NUMBER[:\-\n\s]*?([A-Z0-9]+)/i),
+            enrollmentNumber: getMatch(/ENROLLMENT\s*NUMBER[:\-\n\s]*?([A-Z0-9]+)/i),
+            course: getMatch(/COURSE[:\-\n\s]*?([A-Z ().]+)/i),
+            gender: getMatch(/GENDER[:\-\n\s]*?(MALE|FEMALE|OTHER)/i) || 'FEMALE',
+            semester: getMatch(/([0-9]+)(?:ST|ND|RD|TH)?\s*SEMESTER/i) || '4',
+            examType: getMatch(/COLLEGE\s*EXAMINATION\s*\/\s*([A-Z\s]+)\s*\//i) || 'MAIN EXAM',
+            // FIX: Made these more flexible to capture full college/center names which are often long
+            collegeName: getMatch(/COLLEGE\s*NAME[:\-\n\s]*?([\s\S]*?)(?=EXAMINATION\s*CENTER|SUBJECT)/i),
+            examinationCenter: getMatch(/EXAMINATION\s*CENTER[:\-\n\s]*?([\s\S]*?)(?=SUBJECT|NOTE|PAPER)/i),
+            subject: getMatch(/SUBJECT[:\-\n\s]*?([A-Z\s]+)/i),
+            papers: extractPapers(text.toUpperCase())
+        };
+    }
+
+    // FIX: Enhanced Paper Extraction Logic
+    function extractPapers(text) {
+        const papers = [];
+        // Pattern: PAPER X <CODE> <NAME> <TYPE>
+        // Group 1: Code (e.g., C010401T)
+        // Group 2: Name/Subject ([\s\S]*?) - non-greedy capture of content between code and type
+        // Group 3: Type/Sub-type (Theory, Practical, Minnor, Co Curricular, Vocational, Internal, External)
+        const regex = /PAPER\s*\d+\s*([A-Z0-9]+)\s*([\s\S]*?)(THEORY|PRACTICAL|MINNOR|VOCATIONAL|CO CURRICULAR)[\s,]*?(INTERNAL|EXTERNAL)?/gi;
+        let match;
+        
+        while ((match = regex.exec(text)) !== null) {
+            const rawNameArea = match[2].trim().replace(/[\n\t\r]+/g, ' ').replace(/\s{2,}/g, ' ');
+            const code = match[1].trim();
+            const type1 = match[3].trim();
+            const type2 = match[4] ? match[4].trim() : '';
+
+            // Clean up the raw name area. Remove the subject word if it appears (e.g., 'COMMERCE')
+            // The paper name is usually what's left after stripping the subject/code.
+            let name = rawNameArea.split(/\s+/)
+                                    .filter(p => p.length > 0)
+                                    .filter(p => p !== 'COMMERCE' && p !== 'SUBJECT' && p !== 'MINOR' && p !== 'VOCATIONAL' && p !== 'CO')
+                                    .join(' ');
             
-            // Asli code ke liye, aapko Tesseract.js (image ke liye) ya PDF.js (PDF ke liye)
-            // jaisi library ka istemal karna hoga. Niche ek Tesseract.js ka example hai
-            // jo abhi comment out kiya gaya hai.
-
-            /*
-            const file = event.target.files[0];
-            Tesseract.recognize(file, 'eng', { logger: m => console.log(m) })
-                .then(({ data: { text } }) => {
-                    console.log("Image se nikala gaya text:", text);
-                    // YAHAN AAPKO TEXT MEIN SE NAME, ROLL NUMBER NIKALNE KA LOGIC LIKHNA HOGA
-                    status.textContent = 'Text extracted! Parsing data...';
-                    // Example:
-                    // const rollNo = text.match(/Roll Number: (\w+)/)[1];
-                    // document.getElementById('rollNumber').value = rollNo;
-                })
-                .catch(err => {
-                    console.error("Error processing image:", err);
-                    status.textContent = 'Failed to read data from image.';
-                });
-            */
-            
-            // Abhi ke liye, hum purana SIMULATION wala code hi chala rahe hain
-            setTimeout(() => {
-                const extractedData = {
-                    candidateName: "SNEHA RAWAT", fatherName: "GYANANDRA SINGH", motherName: "ANITA DEVI",
-                    rollNumber: "RC230028001520", enrollmentNumber: "M230095101", course: "B.COM (NEP)",
-                    gender: "FEMALE", semester: "4", examType: "MAIN EXAM",
-                    collegeName: "0028-S.S.V. (P.G.) COLLEGE, HAPUR", examCenter: "0028-S.S.V. (P.G.) COLLEGE, HAPUR",
-                    subject: "COMMERCE",
-                    papers: [ { code: 'C010401T', name: 'INCOME TAX LAW AND ACCOUNTS', type: 'Theory, Internal' }, { code: 'C010402T', name: 'FUNDAMENTALS OF MARKETING', type: 'Theory, Internal' }, { code: 'C010403P', name: 'DIGITAL MARKETING', type: 'Practical, Internal' }, { code: 'C010404T', name: 'FUNDAMENTALS OF ENTREPRENEURSHIP', type: 'Theory, Internal' }, { code: 'Q10021', name: 'AN INTRODUCTION TO CONSTITUTION OF INDIA', type: 'Minor' }, { code: 'V0001015P', name: 'YOGA AND CORRECTIVES', type: 'Vocational' }, { code: 'V0001015T', name: 'YOGA AND CORRECTIVES', type: 'Vocational' }, { code: 'Z040401', name: 'PHYSICAL EDUCATION AND YOGA', type: 'Co Curricular' }, ]
-                };
-                
-                fillFormWithData(extractedData);
-                status.textContent = 'Sample Details Fetched! Switch to Manual Entry to view.';
-            }, 1500);
-        }
-
-        function fillFormWithData(data) {
-            document.getElementById('candidateName').value = data.candidateName;
-            document.getElementById('fatherName').value = data.fatherName;
-            document.getElementById('motherName').value = data.motherName;
-            document.getElementById('rollNumber').value = data.rollNumber;
-            document.getElementById('enrollmentNumber').value = data.enrollmentNumber;
-            document.getElementById('course').value = data.course;
-            document.getElementById('gender').value = data.gender;
-            document.getElementById('semester').value = data.semester;
-            document.getElementById('examType').value = data.examType;
-            document.getElementById('collegeName').value = data.collegeName;
-            document.getElementById('examCenter').value = data.examCenter;
-            document.getElementById('subject').value = data.subject;
-
-            paperEntriesContainer.innerHTML = ''; // Purane papers hata do
-            data.papers.forEach(addPaperEntry);
-        }
-
-  // ✅ You can change this value as per requirement
-  const semester = "4th SEMESTER";
-  const examMonthYear = "JUNE-2025";
-
-  // Insert semester dynamically
-  document.getElementById("current-sem").textContent = `CURRENT SEMESTER (${semester})`;
-
-  // Optionally update full line (if needed)
-  document.getElementById("exam-type-sem").innerHTML =
-    `COLLEGE EXAMINATION / MAIN EXAM / <span style="color:#d32f2f;">CURRENT SEMESTER (${semester})</span> : ${examMonthYear}`;
-    
-        // --- ADMIT CARD GENERATION (Form se data lekar card banane ke liye) ---
-        document.getElementById('generateBtn').addEventListener('click', () => {
-            const candidateName = document.getElementById('candidateName').value, fatherName = document.getElementById('fatherName').value,
-                  motherName = document.getElementById('motherName').value, rollNumber = document.getElementById('rollNumber').value,
-                  enrollmentNumber = document.getElementById('enrollmentNumber').value, course = document.getElementById('course').value,
-                  gender = document.getElementById('gender').value, semester = document.getElementById('semester').value,
-                  examType = document.getElementById('examType').value, collegeName = document.getElementById('collegeName').value,
-                  examCenter = document.getElementById('examCenter').value, subject = document.getElementById('subject').value;
-
-            if (!candidateName || !rollNumber) { alert('Please fill at least the Candidate Name and Roll Number.'); return; }
-
-            document.getElementById('ac-rollNumber').innerText = rollNumber;
-            document.getElementById('ac-enrollmentNumber').innerText = enrollmentNumber;
-            document.getElementById('ac-candidateName').innerText = candidateName.toUpperCase();
-            document.getElementById('ac-fatherMotherName').innerText = `${fatherName.toUpperCase()}/${motherName.toUpperCase()}`;
-            document.getElementById('ac-course').innerText = course.toUpperCase();
-            document.getElementById('ac-gender').innerText = gender.toUpperCase();
-            document.getElementById('ac-collegeName').innerText = collegeName;
-            document.getElementById('ac-examCenter').innerText = examCenter;
-            document.getElementById('ac-subject').innerText = subject.toUpperCase();
-            document.getElementById('exam-type-sem').innerText = `COLLEGE EXAMINATION/${examType.toUpperCase()}/${semester}'TH SEMESTER: JUNE-2025`;
-
-            const tableBody = document.querySelector("#ac-papers-table tbody");
-            tableBody.innerHTML = '';
-            document.querySelectorAll('.paper-entry').forEach((form, index) => {
-                const code = form.children[0].value.toUpperCase();
-                const name = form.children[1].value.toUpperCase();
-                const type = form.children[2].value;
-                if (!code || !name || !type) return;
-
-                const examInfo = examDatesheet[code] || { date: 'Check Website', day: '-', shift: '-' };
-                let rowHtml = `<tr><td>PAPER ${index + 1}</td><td>${code}</td><td>${name}</td><td>${type}</td>`;
-                if (type.toLowerCase().includes('practical') || examInfo.date === 'N/A') {
-                    rowHtml += `<td colspan="3" style="text-align:center;">Date and time to be decided by college.</td>`;
-                } else {
-                    rowHtml += `<td>${examInfo.date}</td><td>${examInfo.day}</td><td>${examInfo.shift}</td>`;
+            // Further refinement: remove the first word if it looks like a subject
+            if (name.length > 0 && name.split(' ')[0].length < 10) {
+                 // Try to filter out general words often used as subjects
+                const subjectKeywords = ['BCOM', 'COMMERCE', 'HINDI', 'ENGLISH', 'SUBJECT'];
+                const firstWord = name.split(' ')[0];
+                if (subjectKeywords.includes(firstWord.toUpperCase())) {
+                    name = name.substring(firstWord.length).trim();
                 }
-                rowHtml += `</tr>`;
-                tableBody.innerHTML += rowHtml;
+            }
+
+
+            papers.push({
+                code: code,
+                name: name.toUpperCase(),
+                type: (type1 + (type2 ? `, ${type2}` : '')).toUpperCase()
             });
-
-            document.getElementById('admit-card-wrapper').style.display = 'block';
-            document.getElementById('downloadBtn').style.display = 'inline-block';
-            document.getElementById('admit-card-wrapper').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        // --- PDF DOWNLOAD ---
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            const element = document.getElementById('admit-card-content');
-            const rollNumber = document.getElementById('rollNumber').value || 'AdmitCard';
-            const opt = { margin: 0.2, filename: `Admit_Card_${rollNumber}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
-            html2pdf().set(opt).from(element).save();
-        });
-    </script>
+        }
+        return papers.length ? papers : [{ code: '', name: '', type: '' }];
+    }
 
 
+    // --- FILL FORM WITH AUTO DATA ---
+    function fillFormWithData(data) {
+      const set = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.value = val || '';
+      };
+      set('candidateName', data.candidateName);
+      set('fatherMotherName', data.fatherMotherName);
+      set('rollNumber', data.rollNumber);
+      set('enrollmentNumber', data.enrollmentNumber);
+      set('course', data.course);
+      // Ensure dropdowns get valid options
+      set('gender', ['MALE', 'FEMALE', 'OTHER'].includes(data.gender) ? data.gender : 'FEMALE');
+      set('semester', data.semester);
+      set('examType', ['MAIN EXAM', 'BACK EXAM', 'EX-STUDENT EXAM'].includes(data.examType) ? data.examType : 'MAIN EXAM');
+      set('collegeName', data.collegeName);
+      set('examinationCenter', data.examinationCenter);
+      set('subject', data.subject);
+
+      paperEntriesContainer.innerHTML = '';
+      if (data.papers.length === 0) {
+        addPaperEntry(); // Add one empty row if none found
+      } else {
+        data.papers.forEach(addPaperEntry);
+      }
+    }
+    
+    // --- UTILITY: SHOW FLOATING MESSAGE (for replacing alert) ---
+    function showFloatingMessage(message, classes = 'bg-blue-500') {
+        let msgBox = document.getElementById('floating-message');
+        if (!msgBox) {
+            msgBox = document.createElement('div');
+            msgBox.id = 'floating-message';
+            msgBox.className = 'fixed top-4 right-4 p-4 rounded-lg text-white shadow-xl transition-opacity duration-300 z-50';
+            document.body.appendChild(msgBox);
+        }
+        msgBox.className = `fixed top-4 right-4 p-4 rounded-lg text-white shadow-xl transition-opacity duration-300 z-50 ${classes}`;
+        msgBox.textContent = message;
+        msgBox.style.opacity = '1';
+
+        setTimeout(() => {
+            msgBox.style.opacity = '0';
+        }, 3000);
+    }
+
+    // --- GENERATE ADMIT CARD ---
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const candidateName = document.getElementById('candidateName').value,
+        fatherMotherName = document.getElementById('fatherMotherName').value,
+        rollNumber = document.getElementById('rollNumber').value,
+        enrollmentNumber = document.getElementById('enrollmentNumber').value,
+        course = document.getElementById('course').value,
+        gender = document.getElementById('gender').value,
+        semester = document.getElementById('semester').value,
+        examType = document.getElementById('examType').value,
+        collegeName = document.getElementById('collegeName').value,
+        examinationCenter = document.getElementById('examinationCenter').value,
+        subject = document.getElementById('subject').value;
+
+      if (!candidateName || !rollNumber) {
+        showFloatingMessage('Please fill at least Candidate Name and Roll Number.', 'bg-red-500');
+        return;
+      }
+
+      // Populate Admit Card Details (FIXED FATHER/MOTHER NAME HERE)
+      document.getElementById('ac-rollNumber').innerText = rollNumber.toUpperCase();
+      document.getElementById('ac-enrollmentNumber').innerText = enrollmentNumber.toUpperCase();
+      document.getElementById('ac-candidateName').innerText = candidateName.toUpperCase();
+      document.getElementById('ac-fatherMotherName').innerText = fatherMotherName.toUpperCase(); // FIX APPLIED HERE
+      document.getElementById('ac-course').innerText = course.toUpperCase();
+      document.getElementById('ac-gender').innerText = gender.toUpperCase();
+      
+      // College and Center take up more space
+      document.getElementById('ac-collegeName').innerText = collegeName.toUpperCase();
+      document.getElementById('ac-examinationCenter').innerText = examinationCenter.toUpperCase();
+      
+      document.getElementById('ac-subject').innerText = subject.toUpperCase();
+
+      document.getElementById('exam-type-sem').innerText = `COLLEGE EXAMINATION / ${examType.toUpperCase()} / ${semester}TH SEMESTER : JUNE-2025`;
+
+      // Populate Papers Table
+      const tableBody = document.querySelector("#ac-papers-table tbody");
+      tableBody.innerHTML = '';
+      let paperCount = 0;
+      document.querySelectorAll('.paper-entry').forEach((form) => {
+        const code = form.children[0].value.toUpperCase().trim();
+        const name = form.children[1].value.toUpperCase().trim();
+        const type = form.children[2].value.toUpperCase().trim();
+        if (!code || !name || !type) return;
+
+        paperCount++;
+        const examInfo = examDatesheet[code] || { date: 'CHECK WEBSITE', day: '-', shift: '-' };
+        
+        let row = `<tr><td>PAPER ${paperCount}</td><td>${code}</td><td>${name}</td><td>${type}</td>`;
+        
+        // Determine if it's a practical/N/A date
+        if (type.includes('PRACTICAL') || type.includes('VOCATIONAL') || examInfo.date === 'N/A') {
+          row += `<td colspan="3" style="text-align:center;">Date & Time to be decided by college.</td>`;
+        } else {
+          row += `<td>${examInfo.date}</td><td>${examInfo.day}</td><td>${examInfo.shift}</td>`;
+        }
+        row += `</tr>`;
+        tableBody.innerHTML += row;
+      });
+      
+      if (paperCount === 0) {
+          tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red; font-weight:bold;">NO PAPER DETAILS ENTERED.</td></tr>';
+      }
+
+
+      document.getElementById('admit-card-wrapper').style.display = 'block';
+      document.getElementById('downloadBtn').style.display = 'inline-block';
+      document.getElementById('admit-card-wrapper').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // --- DOWNLOAD AS PDF ---
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      const element = document.getElementById('admit-card-content');
+      const roll = document.getElementById('rollNumber').value || 'AdmitCard';
+      html2pdf().set({
+        margin: 0.2,
+        filename: `Admit_Card_${roll}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+      }).from(element).save();
+    });
+  </script>
 </body>
 </html>

@@ -1,5 +1,74 @@
-<!DOCTYPE html>
-<html>
-  <head><meta charset="utf-8"><script src="index.js" defer></script></head>
-  <body></body>
-</html>
+// index.js
+document.title = "Chaudhary Charan Singh University, Meerut";
+
+// META TAGS
+const metas = [
+  { charset: "utf-8" },
+  { name: "viewport", content: "width=device-width,initial-scale=1" },
+  { name: "theme-color", content: "#000000" },
+  { name: "description", content: "Web site created using create-react-app" },
+  { property: "og:title", content: "Chaudhary Charan Singh University, Meerut" },
+  { property: "og:description", content: "Chaudhary Charan Singh University (formerly, Meerut University) was established in 1965, to cater to the needs of higher education in western Uttar Pradesh." },
+  { property: "og:image", content: "https://ccsuniversity.blr1.cdn.digitaloceanspaces.com/public/jpg/2024/05/CCSU-Logo.jpg" },
+  { property: "og:type", content: "website" }
+];
+metas.forEach(data => {
+  const m = document.createElement('meta');
+  Object.entries(data).forEach(([k, v]) => m.setAttribute(k, v));
+  document.head.appendChild(m);
+});
+
+// ICONS & STYLES
+[
+  "https://ccsuniversity.blr1.cdn.digitaloceanspaces.com/public/ico/2024/06/favIcon.ico",
+  "/assests/css/main.css",
+  "/assests/css/global.css",
+  "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+].forEach(href => {
+  const l = document.createElement('link');
+  l.rel = href.endsWith(".css") ? "stylesheet" : "icon";
+  l.href = href;
+  document.head.appendChild(l);
+});
+
+// MAIN CONTENT
+document.body.innerHTML = `
+  <div id="google_translate_element" style="position:fixed;top:10px;right:10px;z-index:9999;"></div>
+  <header style="background:#003366;color:white;padding:12px 16px;display:flex;align-items:center;gap:12px;">
+    <img src="https://ccsuniversity.blr1.cdn.digitaloceanspaces.com/public/jpg/2024/05/CCSU-Logo.jpg" alt="CCSU" style="height:48px;">
+    <h1 style="font-size:20px;margin:0;">Chaudhary Charan Singh University, Meerut</h1>
+  </header>
+  <main style="padding:20px;font-family:Arial,sans-serif;">
+    <p>This page has been dynamically created using JavaScript.</p>
+    <ul>
+      <li><a href="#notices">Notices</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#admissions">Admissions</a></li>
+    </ul>
+  </main>
+  <footer style="padding:12px;border-top:1px solid #eee;text-align:center;">
+    <small>© Chaudhary Charan Singh University</small>
+  </footer>
+`;
+
+// GOOGLE TRANSLATE INIT
+window.googleTranslateElementInit = function() {
+  new google.translate.TranslateElement({
+    pageLanguage: "en",
+    includedLanguages: "en,hi",
+    layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+  }, "google_translate_element");
+};
+
+// EXTERNAL SCRIPTS
+[
+  "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit",
+  "https://www.googletagmanager.com/gtag/js?id=G-MWTX6MCL0R",
+  "https://salesiq.zohopublic.in/widget?wc=siq8432fabe1a8737ee8d28ed80839c25cd096ff21d3c59a18a3bcd6a785360e342",
+  "https://platform.twitter.com/widgets.js"
+].forEach(src => {
+  const s = document.createElement("script");
+  s.src = src;
+  s.async = true;
+  document.body.appendChild(s);
+});

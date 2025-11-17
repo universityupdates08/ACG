@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-tab">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viva Voce Center & Date Finder</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Use Inter font */
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        /* Hide a-tab elements */
+        .a-tab-hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Initial Loading Overlay -->
+    <div id="initialLoader" class="text-center p-8">
+        <svg class="animate-spin h-12 w-12 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-gray-600 text-lg mt-4">Loading all viva data...</p>
+    </div>
+
+    <!-- Main Content Card (Initially hidden) -->
+    <div id="mainContent" class="a-tab-hidden bg-white shadow-2xl rounded-xl p-6 md:p-10 w-full max-w-3xl">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Viva Voce Center Finder</h1>
+            <p class="text-lg text-gray-600 mt-2">Find your viva center, date, and time.</p>
+        </div>
+
+        <!-- Form Filters -->
+        <div class="space-y-6">
+
+            <!-- 1. Select Course -->
+            <div>
+                <label for="courseSelect" class="block text-sm font-medium text-gray-700 mb-1">1. Select Course</label>
+                <select id="courseSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-150 ease-in-out">
+                    <option value="">-- Select a Course --</option>
+                    <option value="M.Com.">M.Com.</option>
+                    <option value="M.A.">M.A.</option>
+                </select>
+            </div>
+
+            <!-- 2. Select Subject (Initially hidden) -->
+            <div id="subjectGroup" class="a-tab-hidden">
+                <label for="subjectSelect" class="block text-sm font-medium text-gray-700 mb-1">2. Select Subject</label>
+                <select id="subjectSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-150 ease-in-out">
+                    <!-- Options will be populated by JS -->
+                </select>
+            </div>
+
+            <!-- 3. Select District (Initially hidden) -->
+            <div id="districtGroup" class="a-tab-hidden">
+                <label for="districtSelect" class="block text-sm font-medium text-gray-700 mb-1">3. Select District</label>
+                <select id="districtSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-150 ease-in-out">
+                    <!-- Options will be populated by JS -->
+                </select>
+            </div>
+
+            <!-- 4. Select College (Initially hidden) -->
+            <div id="collegeGroup" class="a-tab-hidden">
+                <label for="collegeSelect" class="block text-sm font-medium text-gray-700 mb-1">4. Select Your College</label>
+                <select id="collegeSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-150 ease-in-out">
+                    <!-- Options will be populated by JS -->
+                </select>
+            </div>
+
+        </div>
+
+        <!-- Results Card (Initially hidden) -->
+        <div id="resultsCard" class="a-tab-hidden mt-8 bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg shadow-inner">
+            <h2 class="text-2xl font-semibold text-blue-800 mb-4">Your Viva Voce Details</h2>
+            <div class="space-y-3">
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Viva Center</h3>
+                    <p id="resultCenter" class="text-lg font-medium text-gray-900"></p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Date</h3>
+                    <p id="resultDate" class="text-lg font-medium text-gray-900"></p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Time</h3>
+                    <p id="resultTime" class="text-lg font-medium text-gray-900"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Card (Initially hidden) -->
+        <div id="errorCard" class="a-tab-hidden mt-8 bg-red-50 border-l-4 border-red-500 p-6 rounded-lg shadow-inner">
+            <h2 class="text-xl font-semibold text-red-800 mb-2">Error</h2>
+            <p id="errorMessage" class="text-red-700"></p>
+        </div>
+
+        <!-- Footer Note -->
+        <div class="text-center mt-8">
+            <p class="text-xs text-gray-500">
+                <strong>Important:</strong> This tool requires all 13 <code>VIVA CENTER.xlsx - ... .csv</code> files
+                to be in the same directory as this HTML file to function correctly.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Store all data in one place
+        const config = {
+            subjectMap: {
+                "M.Com.": [
+                    { text: "M.Com. (I-304)", value: "I-304" }
+                ],
+                "M.A.": [
+                    { text: "Defence Studies (G-895)", value: "G-895" },
+                    { text: "Economics (G-806)", value: "G-806" },
+                    { text: "Education (G-803)", value: "G-803" },
+                    { text: "Education (G-804)", value: "G-804" },
+                    { text: "English (G-812)", value: "G-812" },
+                    { text: "Hindi (G-825)", value: "G-825" },
+                    { text: "History (G-837)", value: "G-837" },
+                    { text: "Mathematics (G-850)", value: "G-850" },
+                    { text: "Philosophy (G-845)", value: "G-845" },
+                    { text: "Political Science (G-870)", value: "G-870" },
+                    { text: "Sanskrit (G-882)", value: "G-882" },
+                    { text: "Sociology (G-887)", value: "G-887" },
+                    { text: "Urdu (G-862)", value: "G-862" }
+                ]
+            },
+            fileMap: {
+                "I-304": "VIVA CENTER.xlsx - M.Com..csv",
+                "G-895": "VIVA CENTER.xlsx - G-895.csv",
+                "G-806": "VIVA CENTER.xlsx - G-806.csv",
+                "G-803": "VIVA CENTER.xlsx - G-803,G-804.csv",
+                "G-804": "VIVA CENTER.xlsx - G-803,G-804.csv",
+                "G-812": "VIVA CENTER.xlsx - G-812.csv",
+                "G-825": "VIVA CENTER.xlsx - G-825.csv",
+                "G-837": "VIVA CENTER.xlsx - G-837.csv",
+                "G-850": "VIVA CENTER.xlsx - G-850.csv",
+                "G-845": "VIVA CENTER.xlsx - G-845.csv",
+                "G-870": "VIVA CENTER.xlsx - G-870.csv",
+                "G-882": "VIVA CENTER.xlsx - G-882.csv",
+                "G-887": "VIVA CENTER.xlsx - G-887.csv",
+                "G-862": "VIVA CENTER.xlsx - G-862.csv"
+            },
+            // To store the loaded data from all files
+            allData: {},
+            // To store data for the currently selected subject
+            loadedData: []
+        };
+
+        // Get all DOM elements
+        const dom = {
+            initialLoader: document.getElementById('initialLoader'),
+            mainContent: document.getElementById('mainContent'),
+            courseSelect: document.getElementById('courseSelect'),
+            subjectGroup: document.getElementById('subjectGroup'),
+            subjectSelect: document.getElementById('subjectSelect'),
+            districtGroup: document.getElementById('districtGroup'),
+            districtSelect: document.getElementById('districtSelect'),
+            collegeGroup: document.getElementById('collegeGroup'),
+            collegeSelect: document.getElementById('collegeSelect'),
+            resultsCard: document.getElementById('resultsCard'),
+            errorCard: document.getElementById('errorCard'),
+            errorMessage: document.getElementById('errorMessage'),
+            resultCenter: document.getElementById('resultCenter'),
+            resultDate: document.getElementById('resultDate'),
+            resultTime: document.getElementById('resultTime')
+        };
+
+        /**
+         * A simple CSV parser to handle quotes.
+         * This is a basic parser and assumes a well-formed CSV.
+         */
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            if (lines.length < 2) return [];
+
+            // Clean headers (remove quotes and BOM)
+            const headers = lines[0].split(',')
+                .map(h => h.trim().replace(/"/g, '').replace(/^\uFEFF/, ''));
+
+            const data = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i]) continue;
+                
+                const values = [];
+                let inQuote = false;
+                let cell = '';
+                
+                for (let j = 0; j < lines[i].length; j++) {
+                    const char = lines[i][j];
+                    
+                    if (char === '"') {
+                        if (inQuote && lines[i][j+1] === '"') { // Handle escaped quote ""
+                            cell += '"';
+                            j++;
+                        } else {
+                            inQuote = !inQuote;
+                        }
+                    } else if (char === ',' && !inQuote) {
+                        values.push(cell.trim());
+                        cell = '';
+                    } else {
+                        cell += char;
+                    }
+                }
+                values.push(cell.trim()); // Push the last cell
+
+                if (values.length === headers.length) {
+                    const obj = {};
+                    headers.forEach((header, index) => {
+                        // Remove surrounding quotes from data values
+                        obj[header] = values[index].replace(/^"|"$/g, '');
+                    });
+                    data.push(obj);
+                } else {
+                    console.warn("Skipping malformed CSV line:", lines[i]);
+                }
+            }
+            return data;
+        }
+
+        // --- Helper functions for showing/hiding elements ---
+        function show(element) { element.classList.remove('a-tab-hidden'); }
+        function hide(element) { element.classList.add('a-tab-hidden'); }
+
+        function resetSelect(selectElement, defaultText) {
+            selectElement.innerHTML = `<option value="">-- ${defaultText} --</option>`;
+        }
+
+        function hideResults() {
+            hide(dom.resultsCard);
+            hide(dom.errorCard);
+        }
+
+        // --- Event Handlers ---
+
+        /**
+         * 1. Handle Course Change
+         * Populates the Subject dropdown.
+         */
+        function handleCourseChange() {
+            const course = dom.courseSelect.value;
+            hide(dom.subjectGroup);
+            hide(dom.districtGroup);
+            hide(dom.collegeGroup);
+            hideResults();
+            resetSelect(dom.subjectSelect, "Select a Subject");
+
+            if (course) {
+                const subjects = config.subjectMap[course];
+                subjects.forEach(subject => {
+                    const option = new Option(subject.text, subject.value);
+                    dom.subjectSelect.add(option);
+                });
+                show(dom.subjectGroup);
+            }
+        }
+
+        /**
+         * 2. Handle Subject Change
+         * Loads data from the pre-fetched `config.allData` object.
+         */
+        function handleSubjectChange() {
+            const subjectCode = dom.subjectSelect.value;
+            hide(dom.districtGroup);
+            hide(dom.collegeGroup);
+            hideResults();
+            resetSelect(dom.districtSelect, "Select a District");
+
+            if (!subjectCode) {
+                config.loadedData = [];
+                return;
+            }
+
+            // Get data from the pre-loaded object
+            config.loadedData = config.allData[subjectCode] || [];
+
+            if (config.loadedData.length === 0) {
+                 dom.errorMessage.innerHTML = `No data found for subject ${subjectCode}. The data file might be empty or missing.`;
+                 show(dom.errorCard);
+                 return;
+            }
+
+            populateDistricts();
+            show(dom.districtGroup);
+        }
+
+        /**
+         * 3. Populate District Dropdown
+         * Called after data is successfully loaded.
+         */
+        function populateDistricts() {
+            const districts = [...new Set(
+                config.loadedData
+                    .map(row => row.District?.trim())
+                    .filter(Boolean) // Remove any empty/undefined districts
+            )].sort();
+
+            districts.forEach(district => {
+                // Correcting potential name mismatches from the user request
+                let districtName = district;
+                if (district.toLowerCase().includes('bulandshahar')) districtName = "Bulandshahar";
+                if (district.toLowerCase().includes('noida')) districtName = "Gautam Buddh Nagar (Noida)";
+
+                const option = new Option(districtName, district); // Use original name for value
+                dom.districtSelect.add(option);
+            });
+            
+            // De-duplicate if names were corrected
+            const uniqueOptions = {};
+            Array.from(dom.districtSelect.options).forEach(opt => {
+                if (opt.value) uniqueOptions[opt.text] = opt.value;
+            });
+            resetSelect(dom.districtSelect, "Select a District");
+            Object.keys(uniqueOptions).sort().forEach(text => {
+                dom.districtSelect.add(new Option(text, uniqueOptions[text]));
+            });
+        }
+
+        /**
+         * 4. Handle District Change
+         * Populates the College dropdown based on selected district and subject.
+         */
+        function handleDistrictChange() {
+            const selectedDistrict = dom.districtSelect.value;
+            const selectedSubjectCode = dom.subjectSelect.value;
+            
+            hide(dom.collegeGroup);
+            hideResults();
+            resetSelect(dom.collegeSelect, "Select Your College");
+
+            if (!selectedDistrict || !selectedSubjectCode) return;
+
+            const colleges = [...new Set(
+                config.loadedData
+                    .filter(row =>
+                        row.District?.trim() === selectedDistrict &&
+                        row['Subject Code']?.trim() === selectedSubjectCode
+                    )
+                    .map(row => row['Attached Colleges']?.trim())
+                    .filter(Boolean) // Remove empty college names
+            )].sort();
+
+            if (colleges.length > 0) {
+                colleges.forEach(college => {
+                    const option = new Option(college, college);
+                    dom.collegeSelect.add(option);
+                });
+                show(dom.collegeGroup);
+            } else {
+                dom.errorMessage.innerHTML = "No colleges found for this subject in the selected district.";
+                show(dom.errorCard);
+            }
+        }
+
+        /**
+         * 5. Handle College Change
+         * Finds and displays the final viva details.
+         */
+        function handleCollegeChange() {
+            const selectedCollege = dom.collegeSelect.value;
+            const selectedSubjectCode = dom.subjectSelect.value;
+            
+            hideResults();
+
+            if (!selectedCollege || !selectedSubjectCode) return;
+
+            const result = config.loadedData.find(row =>
+                row['Attached Colleges']?.trim() === selectedCollege &&
+                row['Subject Code']?.trim() === selectedSubjectCode
+            );
+
+            if (result) {
+                dom.resultCenter.textContent = result['Name of Center'] || 'N/A';
+                dom.resultDate.textContent = result.Date || 'N/A';
+                dom.resultTime.textContent = result.Time || 'N/A';
+                show(dom.resultsCard);
+            } else {
+                dom.errorMessage.innerHTML = "Could not find viva details for the selected college. Please double-check your selections.";
+                show(dom.errorCard);
+            }
+        }
+
+        /**
+         * 6. Load All Data on Page Start
+         * Fetches all CSV files at once and stores them in config.allData
+         */
+        async function loadAllData() {
+            // Get unique file names
+            const uniqueFiles = [...new Set(Object.values(config.fileMap))];
+            
+            try {
+                // Fetch all unique files in parallel
+                const filePromises = uniqueFiles.map(async (file) => {
+                    const response = await fetch(file);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load: ${file}`);
+                    }
+                    const csvText = await response.text();
+                    const data = parseCSV(csvText);
+                    return { file, data };
+                });
+
+                const results = await Promise.all(filePromises);
+
+                // Create a map of filename -> data
+                const fileDataMap = {};
+                results.forEach(result => {
+                    fileDataMap[result.file] = result.data;
+                });
+
+                // Map the data back to subject codes
+                for (const subjectCode in config.fileMap) {
+                    const fileName = config.fileMap[subjectCode];
+                    config.allData[subjectCode] = fileDataMap[fileName] || [];
+                }
+                
+                // Show the main content
+                hide(dom.initialLoader);
+                show(dom.mainContent);
+
+            } catch (error) {
+                // Show a permanent error on the page if loading fails
+                dom.initialLoader.innerHTML = `
+                    <h2 class="text-2xl font-semibold text-red-800 mb-2">Error Loading Data</h2>
+                    <p class="text-red-700">Could not load critical data files.</p>
+                    <p class="text-gray-600 mt-4">Please ensure all 13 <code>VIVA CENTER.xlsx - ... .csv</code> files are in the same folder as this HTML file and that the page is loaded from a web server (not by opening the file directly).</p>
+                    <p class="text-gray-500 mt-2"><strong>Error:</strong> ${error.message}</p>
+                `;
+                console.error("Failed to load all data:", error);
+            }
+        }
+
+        // --- Initial Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listeners
+            dom.courseSelect.addEventListener('change', handleCourseChange);
+            dom.subjectSelect.addEventListener('change', handleSubjectChange);
+            dom.districtSelect.addEventListener('change', handleDistrictChange);
+            dom.collegeSelect.addEventListener('change', handleCollegeChange);
+            
+            // Load all data
+            loadAllData();
+        });
+    </script>
+</body>
+</html>

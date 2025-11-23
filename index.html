@@ -109,7 +109,7 @@
                         </button>
                     </div>
 
-                    <!-- Gemini AI Button (Requires fetch API logic) -->
+                    <!-- Gemini AI Button -->
                     <button id="gemini-ai-btn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-150 shadow-md flex items-center justify-center space-x-2">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-3.5-7.5a.5.5 0 000 1h7a.5.5 0 000-1h-7z" clip-rule="evenodd"></path><path d="M10 2a8 8 0 00-6.91 11.96l-.76.76a.5.5 0 00.707.707l.76-.76A8 8 0 1010 2zM7 11.5a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5z" fill="white"></path></svg>
                         <span id="gemini-btn-text">Analyze with Gemini AI</span>
@@ -129,9 +129,9 @@
 
                     <!-- Gemini AI Analysis Block -->
                     <div id="gemini-analysis-block" class="p-4 bg-emerald-50 rounded-lg border-l-4 border-emerald-500 hidden">
-                        <h4 class="font-bold text-gray-700 mb-2 flex items-center space-x-2">
+                        <h4 class="font-bold text-gray-700 mb-2 flex items-center space-x-2" id="gemini-analysis-heading">
                             <svg class="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v1h-2V4H7v1H5V4zM4 6h12v11a3 3 0 01-3 3H7a3 3 0 01-3-3V6zm2 4a1 1 0 00-1 1v2a1 1 0 001 1h8a1 1 0 001-1v-2a1 1 0 00-1-1H6z"></path></svg>
-                            <span id="gemini-analysis-heading">Gemini AI Analysis:</span>
+                            <span>Gemini AI Analysis:</span>
                         </h4>
                         <div id="gemini-analysis-content" class="text-gray-600">
                             <!-- Analysis content and loading spinner will be placed here -->
@@ -160,7 +160,6 @@
 
     <script>
         // --- DATA STRUCTURE (Only for navigation and translation) ---
-        // Hardcoded list of subjects and units for button rendering
         const quizData = {
             english: {
                 'Business Organisation': {
@@ -198,10 +197,11 @@
         let currentUnit = '';
         let currentQuestionIndex = 0;
         let selectedOptionIndex = null;
-        let questionSet = []; // Stores the dynamically generated questions
+        let questionSet = [];
 
-        const API_KEY = ""; // Placeholder for the API Key
-        const NUMBER_OF_QUESTIONS = 5;
+        const API_KEY = "AIzaSyBJuy8fJKZGuv2wJC9gVQUL_7lWvepXloY"; // ⬅️ Put your key here
+        const MODEL_ID = "gemini-2.5-flash-preview-09-2025";
+        const NUMBER_OF_QUESTIONS = 100;
 
         // --- DOM Elements ---
         const dom = {
@@ -211,7 +211,7 @@
             unitList: document.getElementById('unit-list'),
             quizContainer: document.getElementById('quiz-container'),
             welcomeMessage: document.getElementById('welcome-message'),
-            loadingQuestions: document.getElementById('loading-questions'), // New element for loading
+            loadingQuestions: document.getElementById('loading-questions'),
             questionCard: document.getElementById('question-card'),
             questionText: document.getElementById('question-text'),
             optionsContainer: document.getElementById('options-container'),
@@ -226,6 +226,7 @@
             explanationText: document.getElementById('explanation-text'),
             geminiAnalysisBlock: document.getElementById('gemini-analysis-block'),
             geminiAnalysisContent: document.getElementById('gemini-analysis-content'),
+            geminiSources: document.getElementById('gemini-sources'), // ✅ ADDED
             currentUnitInfo: document.getElementById('current-unit-info'),
             questionCounter: document.getElementById('question-counter'),
             selectorTitle: document.getElementById('selector-title'),
@@ -237,14 +238,12 @@
 
         // --- UTILITY FUNCTIONS ---
 
-        // Helper function for exponential backoff retry logic
         async function fetchWithRetry(url, options, maxRetries = 3) {
             for (let i = 0; i < maxRetries; i++) {
                 try {
                     const response = await fetch(url, options);
                     if (!response.ok) {
                         if (response.status === 429 && i < maxRetries - 1) {
-                            // Rate limit hit, wait with exponential backoff
                             const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
                             await new Promise(resolve => setTimeout(resolve, delay));
                             continue;
@@ -255,7 +254,6 @@
                 } catch (error) {
                     console.error(`Fetch attempt ${i + 1} failed:`, error);
                     if (i === maxRetries - 1) throw error;
-                    // Wait before the next retry
                     const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
                     await new Promise(resolve => setTimeout(resolve, delay));
                 }
@@ -265,26 +263,36 @@
         // --- QUESTION GENERATION LOGIC ---
 
         async function generateQuestions(subject, unit, language) {
+            const isEnglish = language === 'english';
+
+            if (!API_KEY) {
+                dom.welcomeMessage.classList.remove('hidden');
+                dom.loadingQuestions.classList.add('hidden');
+                dom.questionCard.classList.add('hidden');
+                dom.welcomeMessage.textContent = isEnglish
+                    ? 'Please set your Gemini API key in the code (API_KEY constant).'
+                    : 'कृपया कोड में अपना जेमिनी API कुंजी (API_KEY) सेट करें।';
+                return;
+            }
+
             dom.welcomeMessage.classList.add('hidden');
             dom.questionCard.classList.add('hidden');
             dom.loadingQuestions.classList.remove('hidden');
 
-            const isEnglish = language === 'english';
             const targetLang = isEnglish ? 'English' : 'Hindi';
 
             const systemPrompt = `You are a specialist in creating challenging and concept-based Multiple Choice Questions (MCQs) for 1st-semester undergraduate commerce students.
-                Your task is to generate exactly ${NUMBER_OF_QUESTIONS} MCQs for the subject "${subject}" under the unit "${unit}".
-                Each question must have 4 distinct options and one clear correct answer.
-                Provide a detailed, accurate explanation for why the chosen answer is correct.
-                The entire response must be a valid JSON array matching the provided schema, and all text (question, options, explanation) must be in ${targetLang}.`;
+Your task is to generate exactly ${NUMBER_OF_QUESTIONS} MCQs for the subject "${subject}" under the unit "${unit}".
+Each question must have 4 distinct options and one clear correct answer.
+Provide a detailed, accurate explanation for why the chosen answer is correct.
+The entire response must be a valid JSON array matching the provided schema, and all text (question, options, explanation) must be in ${targetLang}.`;
 
             const userQuery = `Generate ${NUMBER_OF_QUESTIONS} fresh, challenging MCQs for the topic: ${subject} - ${unit}. Ensure all output is in ${targetLang}.`;
 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${API_KEY}`;
 
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
                 generationConfig: {
                     responseMimeType: "application/json",
@@ -336,43 +344,45 @@
                 console.error("Question Generation Error:", error);
                 dom.loadingQuestions.classList.add('hidden');
                 dom.welcomeMessage.classList.remove('hidden');
-                dom.welcomeMessage.textContent = isEnglish ?
-                    `Error generating questions for ${unit}. Please try again.` :
-                    `${unit} के लिए प्रश्न बनाने में त्रुटि। कृपया पुनः प्रयास करें।`;
+                dom.welcomeMessage.textContent = isEnglish
+                    ? `Error generating questions for ${unit}. Please check your API key or try again.`
+                    : `${unit} के लिए प्रश्न बनाने में त्रुटि। कृपया अपनी API कुंजी जांचें या पुनः प्रयास करें।`;
             }
         }
 
-
-        // --- GEMINI AI ANALYSIS LOGIC (Kept largely the same) ---
+        // --- GEMINI AI ANALYSIS LOGIC ---
 
         async function analyzeQuestionWithGemini() {
             if (!currentSubject || !currentUnit || !questionSet.length) return;
+            if (!API_KEY) {
+                dom.geminiAnalysisBlock.classList.remove('hidden');
+                dom.geminiAnalysisContent.innerHTML = '<p class="text-red-600 text-sm">Please set your Gemini API key in the code (API_KEY constant).</p>';
+                return;
+            }
 
             const currentQuestion = questionSet[currentQuestionIndex];
             const questionText = currentQuestion.q + ' Options: ' + currentQuestion.options.join(', ') + '. Correct answer index: ' + currentQuestion.ans;
 
-            // Update UI for loading state
             dom.geminiAnalysisBlock.classList.remove('hidden');
-            dom.geminiAnalysisContent.innerHTML = '<div class="flex items-center space-x-2 text-emerald-600"><svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Analyzing... This may take a moment.</span></div>';
+            dom.geminiAnalysisContent.innerHTML = '<div class="flex items-center space-x-2 text-emerald-600"><svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Analyzing...</span></div>';
             dom.geminiAiBtn.disabled = true;
             dom.geminiAiBtn.classList.add('opacity-50', 'cursor-not-allowed');
             dom.sourcesList.innerHTML = '';
             dom.geminiSources.classList.add('hidden');
 
             const systemPrompt = `You are an expert commerce and finance tutor for 1st-semester university students. Your goal is to provide a concise, single-paragraph analysis of the multiple-choice question provided.
-                1. Clearly explain the core concept being tested.
-                2. Explain why the correct option is the definitive answer.
-                3. Briefly explain why the other options are incorrect.
-                4. Maintain a professional and encouraging tone.`;
+1. Clearly explain the core concept being tested.
+2. Explain why the correct option is the definitive answer.
+3. Briefly explain why the other options are incorrect.
+4. Maintain a professional and encouraging tone.`;
 
             const userQuery = `Analyze the following commerce MCQ from the unit "${currentSubject} - ${currentUnit}". The question is: "${questionText}". Provide the analysis in ${currentLanguage === 'english' ? 'English' : 'Hindi'}.`;
 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${API_KEY}`;
 
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
+                systemInstruction: { parts: [{ text: systemPrompt }] }
             };
 
             try {
@@ -387,11 +397,11 @@
 
                 if (candidate && candidate.content?.parts?.[0]?.text) {
                     const text = candidate.content.parts[0].text;
-                    dom.geminiAnalysisContent.innerHTML = `<p class="text-gray-700">${text}</p>`;
+                    dom.geminiAnalysisContent.innerHTML = `<p class="text-gray-700 text-sm leading-relaxed">${text}</p>`;
 
-                    // Extract and display grounding sources
+                    // If grounding info exists (it may not), show it
                     let sources = [];
-                    const groundingMetadata = candidate.groundingMetadata;
+                    const groundingMetadata = candidate.groundingMetadata || result.groundingMetadata;
                     if (groundingMetadata && groundingMetadata.groundingAttributions) {
                         sources = groundingMetadata.groundingAttributions
                             .map(attribution => ({
@@ -408,19 +418,17 @@
                         dom.geminiSources.classList.remove('hidden');
                     }
                 } else {
-                    dom.geminiAnalysisContent.innerHTML = '<p class="text-red-600">AI analysis failed. Please try again later.</p>';
+                    dom.geminiAnalysisContent.innerHTML = '<p class="text-red-600 text-sm">AI analysis failed. Please try again later.</p>';
                 }
 
             } catch (error) {
                 console.error("Gemini API Error:", error);
-                dom.geminiAnalysisContent.innerHTML = '<p class="text-red-600">Failed to connect to the AI service. Check network or API key setup.</p>';
+                dom.geminiAnalysisContent.innerHTML = '<p class="text-red-600 text-sm">Failed to connect to the AI service. Check your network or API key.</p>';
             } finally {
-                // Re-enable button
                 dom.geminiAiBtn.disabled = false;
                 dom.geminiAiBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
-
 
         // --- RENDERING FUNCTIONS ---
 
@@ -434,8 +442,8 @@
             dom.explanationBtn.textContent = isEnglish ? 'Show Explanation' : 'स्पष्टीकरण दिखाएँ';
             dom.nextQuestionBtn.textContent = isEnglish ? 'Next Question' : 'अगला प्रश्न';
             dom.geminiBtnText.textContent = isEnglish ? 'Analyze with Gemini AI' : 'जेमिनी एआई से विश्लेषण करें';
-            dom.explanationHeading.textContent = isEnglish ? 'Explanation:' : 'स्पष्टीकरण:';
-            dom.geminiAnalysisHeading.textContent = isEnglish ? 'Gemini AI Analysis:' : 'जेमिनी एआई विश्लेषण:';
+            document.getElementById('explanation-heading').textContent = isEnglish ? 'Explanation:' : 'स्पष्टीकरण:';
+            dom.geminiAnalysisHeading.firstChild && (dom.geminiAnalysisHeading.lastChild.textContent = isEnglish ? 'Gemini AI Analysis:' : 'जेमिनी एआई विश्लेषण:');
             dom.sourcesHeading.textContent = isEnglish ? 'Sources:' : 'स्रोत:';
         }
 
@@ -451,14 +459,12 @@
                 const isActive = subject === currentSubject;
                 const button = document.createElement('button');
                 button.textContent = subject;
-                // FIX: Ensured w-full is used to make the buttons visible in the vertical list.
                 button.className = `w-full text-left py-2 px-4 rounded-lg font-medium transition duration-150 ${isActive ? 'bg-indigo-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600'}`;
                 button.onclick = () => selectSubject(subject);
                 dom.subjectList.appendChild(button);
             });
 
             if (currentSubject) {
-                // Rerender units if a subject is already selected
                 dom.welcomeMessage.classList.add('hidden');
                 dom.unitSection.classList.remove('hidden');
                 renderUnits(currentSubject);
@@ -481,11 +487,9 @@
             });
 
             if (currentUnit && questionSet.length > 0) {
-                // Only show question card if questions are already generated
                 dom.questionCard.classList.remove('hidden');
                 renderQuestion();
             } else if (currentUnit) {
-                // If unit is selected but questions aren't loaded (first selection or language switch)
                 generateQuestions(currentSubject, currentUnit, currentLanguage);
             }
         }
@@ -497,9 +501,7 @@
             const isEnglish = currentLanguage === 'english';
             const totalQuestions = questionSet.length;
 
-            // Reset UI
             selectedOptionIndex = null;
-            dom.feedbackArea.classList.remove('pointer-events-none');
             dom.resultMessage.classList.add('hidden');
             dom.explanationBlock.classList.add('hidden');
             dom.nextQuestionBtn.classList.add('hidden');
@@ -511,13 +513,11 @@
             dom.geminiAiBtn.disabled = false;
             dom.geminiAiBtn.classList.remove('opacity-50', 'cursor-not-allowed');
 
-            // Set texts
             dom.currentUnitInfo.textContent = `${currentSubject} / ${currentUnit}`;
             dom.questionCounter.textContent = isEnglish ? `Question ${currentQuestionIndex + 1} of ${totalQuestions}` : `प्रश्न ${currentQuestionIndex + 1} / ${totalQuestions}`;
             dom.questionText.textContent = qData.q;
             dom.optionsContainer.innerHTML = '';
 
-            // Render options
             qData.options.forEach((option, index) => {
                 const button = document.createElement('button');
                 button.textContent = option;
@@ -531,14 +531,12 @@
         function handleOptionSelection(event) {
             const allOptions = dom.optionsContainer.querySelectorAll('.option-button');
             const clickedButton = event.target.closest('.option-button');
-
             if (!clickedButton) return;
 
-            // Deselect all and select the clicked one
             allOptions.forEach(btn => btn.classList.remove('selected-option', 'correct-answer', 'incorrect-answer', 'font-bold'));
             clickedButton.classList.add('selected-option');
 
-            selectedOptionIndex = parseInt(clickedButton.dataset.index);
+            selectedOptionIndex = parseInt(clickedButton.dataset.index, 10);
             dom.checkAnswerBtn.disabled = false;
             dom.checkAnswerBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         }
@@ -552,12 +550,10 @@
             const options = dom.optionsContainer.querySelectorAll('.option-button');
             const isEnglish = currentLanguage === 'english';
 
-            // Disable further interaction
             options.forEach(btn => btn.onclick = null);
             dom.checkAnswerBtn.classList.add('hidden');
             dom.explanationBtn.classList.remove('hidden');
 
-            // Show result message
             dom.resultMessage.classList.remove('hidden', 'bg-red-100', 'bg-green-100', 'text-red-800', 'text-green-800');
             if (isCorrect) {
                 dom.resultMessage.classList.add('bg-green-100', 'text-green-800');
@@ -567,7 +563,6 @@
                 dom.resultMessage.textContent = isEnglish ? 'Result: Incorrect. Review the explanation.' : 'परिणाम: गलत। स्पष्टीकरण की समीक्षा करें।';
             }
 
-            // Highlight correct and incorrect options
             options.forEach((btn, index) => {
                 btn.classList.remove('selected-option');
                 if (index === correctIndex) {
@@ -577,7 +572,6 @@
                 }
             });
 
-            // Show next question button
             dom.nextQuestionBtn.classList.remove('hidden');
         }
 
@@ -594,21 +588,19 @@
 
         function selectSubject(subject) {
             currentSubject = subject;
-            currentUnit = ''; // Reset unit when subject changes
-            questionSet = []; // Clear current questions
-            renderSubjects(); // Rerender subjects to highlight the active one
+            currentUnit = '';
+            questionSet = [];
+            renderSubjects();
             dom.unitSection.classList.remove('hidden');
             dom.questionCard.classList.add('hidden');
         }
 
         function selectUnit(unit) {
-            if (currentUnit === unit) return; // Avoid re-generating questions if same unit is clicked
+            if (currentUnit === unit) return;
 
             currentUnit = unit;
-            questionSet = []; // Ensure old questions are cleared
-            renderSubjects(); // Rerender units to highlight the active one
-
-            // Trigger dynamic question generation
+            questionSet = [];
+            renderSubjects();
             generateQuestions(currentSubject, currentUnit, currentLanguage);
         }
 
@@ -622,27 +614,25 @@
                 currentQuestionIndex++;
                 renderQuestion();
             } else {
-                // End of quiz for this unit
                 dom.questionCard.classList.add('hidden');
                 dom.welcomeMessage.classList.remove('hidden');
                 dom.welcomeMessage.textContent = currentLanguage === 'english' ?
                     `You have completed Unit ${currentUnit} of ${currentSubject}! Select another unit or subject to generate a new test.` :
                     `आपने ${currentSubject} की इकाई ${currentUnit} पूरी कर ली है! नया टेस्ट जनरेट करने के लिए कोई अन्य इकाई या विषय चुनें।`;
-                currentUnit = ''; // Reset unit
-                questionSet = []; // Clear questions
-                renderSubjects(); // Go back to subject selection view
+                currentUnit = '';
+                questionSet = [];
+                renderSubjects();
             }
         }
 
         function toggleLanguage() {
             currentLanguage = currentLanguage === 'english' ? 'hindi' : 'english';
-            // Reset state to force regeneration in new language
             currentSubject = '';
             currentUnit = '';
             questionSet = [];
 
             updateTexts();
-            renderSubjects(); // Re-render everything in the new language
+            renderSubjects();
         }
 
         // --- EVENT LISTENERS & INITIALIZATION ---
@@ -653,13 +643,10 @@
         dom.explanationBtn.addEventListener('click', showExplanation);
         dom.geminiAiBtn.addEventListener('click', analyzeQuestionWithGemini);
 
-
-        // Initial setup - Changed to IIFE for immediate execution
         (function init() {
             updateTexts();
             renderSubjects();
         })();
-
     </script>
 </body>
 </html>

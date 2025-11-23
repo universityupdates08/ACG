@@ -359,7 +359,7 @@
             dom.sourcesList.innerHTML = '';
             dom.geminiSources.classList.add('hidden');
 
-            const systemPrompt = `You are an expert commerce and finance tutor for first-semester university students. Your goal is to provide a concise, single-paragraph analysis of the multiple-choice question provided.
+            const systemPrompt = `You are an expert commerce and finance tutor for 1st-semester university students. Your goal is to provide a concise, single-paragraph analysis of the multiple-choice question provided.
                 1. Clearly explain the core concept being tested.
                 2. Explain why the correct option is the definitive answer.
                 3. Briefly explain why the other options are incorrect.
@@ -451,7 +451,8 @@
                 const isActive = subject === currentSubject;
                 const button = document.createElement('button');
                 button.textContent = subject;
-                button.className = `w-full md:w-auto text-left py-2 px-4 rounded-lg font-medium transition duration-150 ${isActive ? 'bg-indigo-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600'}`;
+                // FIX: Ensured w-full is used to make the buttons visible in the vertical list.
+                button.className = `w-full text-left py-2 px-4 rounded-lg font-medium transition duration-150 ${isActive ? 'bg-indigo-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600'}`;
                 button.onclick = () => selectSubject(subject);
                 dom.subjectList.appendChild(button);
             });

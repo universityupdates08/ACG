@@ -29,7 +29,6 @@
       --card-bg: rgba(255, 255, 255, 0.97);
       --soft-border: #e5e7eb;
 
-      /* From calculator page */
       --blue: #007BFF;
       --green: #28a745;
       --red: #dc3545;
@@ -47,31 +46,6 @@
       color: #0f172a;
     }
 
-    /* Generic section card */
-    .section-card {
-      background: var(--card-bg);
-      border-radius: 1rem;
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-      padding: 1.75rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid rgba(148, 163, 184, 0.15);
-    }
-
-    .section-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-      color: #111827;
-      letter-spacing: 0.02em;
-    }
-
-    .section-subtitle {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #6b7280;
-    }
-
-    /* Utility bar */
     .utility-bar {
       background-color: #0f172a;
       color: #e5e7eb;
@@ -89,43 +63,12 @@
       color: var(--secondary-color);
     }
 
-    /* Nav */
     .main-nav {
       background-color: #ffffffdd;
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(148, 163, 184, 0.25);
     }
 
-    .nav-link {
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 0.4rem 0.75rem;
-      border-radius: 999px;
-      transition: background-color 0.15s ease, color 0.15s ease;
-    }
-
-    .nav-link:hover {
-      background-color: rgba(239, 60, 60, 0.08);
-      color: var(--primary-color);
-    }
-
-    /* Dropdown */
-    nav {
-      position: relative;
-      z-index: 50;
-    }
-
-    nav .group:hover .nav-dropdown {
-      display: block !important;
-      z-index: 60;
-    }
-
-    .nav-dropdown {
-      border-radius: 0.75rem;
-      overflow: hidden;
-    }
-
-    /* Announcement strip (replaces marquee) */
     .announcement-bar {
       background-color: var(--primary-color);
       color: white;
@@ -176,7 +119,6 @@
       }
     }
 
-     /* Buttons / cards */
     .primary-chip {
       display: inline-flex;
       align-items: center;
@@ -191,41 +133,6 @@
       letter-spacing: 0.08em;
     }
 
-    .cta-card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      padding: 0.9rem 1rem;
-      border-radius: 0.9rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #f9fafb;
-      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-      text-align: center;
-    }
-
-    .cta-card img {
-      height: 32px;
-      width: 32px;
-      object-fit: contain;
-      background: #ffffff;
-      border-radius: 999px;
-      padding: 4px;
-    }
-
-    .cta-card:hover {
-      transform: translateY(-2px) scale(1.015);
-      box-shadow: 0 18px 38px rgba(15, 23, 42, 0.45);
-      filter: brightness(1.05);
-    }
-
-
-
-
-    /* Scroll to top button */
     #topBtn {
       display: none;
       position: fixed;
@@ -249,16 +156,12 @@
       transform: translateY(-1px) scale(1.03);
     }
 
- 
-    /* =========================
-       QUIZ TOOL STYLES
-       ========================= */
     .scrollable-subjects {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
     .scrollable-subjects::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
+      display: none;
     }
     .option-button {
       transition: all 0.2s ease;
@@ -268,11 +171,11 @@
       background-color: #ECFDF5 !important;
     }
     .correct-answer {
-      background-color: #D1FAE5 !important; /* Light green */
+      background-color: #D1FAE5 !important;
       border-color: #059669 !important;
     }
     .incorrect-answer {
-      background-color: #FEE2E2 !important; /* Light red */
+      background-color: #FEE2E2 !important;
       border-color: #EF4444 !important;
     }
   </style>
@@ -337,10 +240,9 @@
           <p class="text-xs text-slate-500 mt-1">
             Free Study Resources • Tools • Notifications
           </p>
-        </div></div></div>
-      
-
-     
+        </div>
+      </div>
+    </div>
   </header>
 
   <!-- Greeting Strip -->
@@ -369,14 +271,55 @@
     </div>
   </div>
 
-  <!-- =========================
-       COMMERCE I MCQ PREP TOOL
-       ========================= -->
+  <!-- MAIN -->
   <main class="min-h-screen flex flex-col">
     <section class="flex flex-col md:flex-row flex-grow max-w-7xl mx-auto w-full p-4 space-y-4 md:space-y-0 md:space-x-4 mt-4">
 
-      <!-- Subject and Unit Navigation (Sidebar/Topbar on Mobile) -->
+      <!-- Sidebar -->
       <aside class="w-full md:w-64 bg-white p-4 rounded-xl shadow-lg flex-shrink-0">
+        <!-- COURSE + SEMESTER -->
+        <div class="mb-4 space-y-3">
+          <div>
+            <label
+              id="course-label"
+              for="course-select"
+              class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1"
+            >
+              Course
+            </label>
+            <select
+              id="course-select"
+              class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">Select course</option>
+              <option value="B.COM.">B.COM.</option>
+              <option value="B.A.">B.A.</option>
+              <option value="B.Sc.">B.Sc.</option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              id="semester-label"
+              for="semester-select"
+              class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1"
+            >
+              Semester
+            </label>
+            <select
+              id="semester-select"
+              class="w-full border border-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">Select semester</option>
+              <option value="1st">1st</option>
+              <option value="2nd">2nd</option>
+              <option value="4th">4th</option>
+              <option value="6th">6th</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- SUBJECT + LANGUAGE SWITCH -->
         <div class="flex justify-between items-center mb-3">
           <h2 id="selector-title" class="text-lg font-semibold text-gray-700 border-b pb-2">
             Select Subject
@@ -393,7 +336,7 @@
           id="subject-list"
           class="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2 overflow-x-auto scrollable-subjects pb-2"
         >
-          <!-- Subject buttons will be injected here -->
+          <!-- Subject buttons injected here -->
         </div>
 
         <div id="unit-section" class="mt-4 pt-4 border-t hidden">
@@ -404,7 +347,7 @@
             id="unit-list"
             class="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2 overflow-x-auto scrollable-subjects"
           >
-            <!-- Unit buttons will be injected here -->
+            <!-- Unit buttons injected here -->
           </div>
         </div>
       </aside>
@@ -413,10 +356,10 @@
       <section class="flex-grow bg-white p-6 rounded-xl shadow-lg">
         <div id="quiz-container">
           <p id="welcome-message" class="text-gray-600 text-lg py-12 text-center">
-            Welcome! Please select a subject and a unit to begin your MCQ test.
+            Please select your course and semester to begin.
           </p>
 
-          <!-- Loading State for Dynamic Questions -->
+          <!-- Loading State -->
           <div
             id="loading-questions"
             class="hidden p-6 text-center text-indigo-600"
@@ -464,9 +407,7 @@
           ></p>
 
           <!-- Options -->
-          <div id="options-container" class="space-y-3">
-            <!-- Options will be injected here -->
-          </div>
+          <div id="options-container" class="space-y-3"></div>
 
           <!-- Action Buttons -->
           <div
@@ -505,7 +446,7 @@
                   clip-rule="evenodd"
                 ></path>
                 <path
-                  d="M10 2a8 8 0 00-6.91 11.96l-.76.76a.5.5 0 00.707.707l.76-.76A8 8 0 1010 2zM7 11.5a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5z"
+                  d="M10 2a8 8 0 00-6.91 11.96ल-.76.76a.5.5 0 00.707.707l.76-.76A8 8 0 1010 2zM7 11.5a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5z"
                   fill="white"
                 ></path>
               </svg>
@@ -515,13 +456,11 @@
 
           <!-- Feedback Area -->
           <div id="feedback-area" class="mt-6 space-y-4">
-            <!-- Answer Result Message -->
             <div
               id="result-message"
               class="p-3 rounded-lg font-medium hidden"
             ></div>
 
-            <!-- Explanation Block -->
             <div
               id="explanation-block"
               class="p-4 bg-gray-100 rounded-lg border-l-4 border-yellow-500 hidden"
@@ -535,7 +474,6 @@
               <p id="explanation-text" class="text-gray-600"></p>
             </div>
 
-            <!-- Gemini AI Analysis Block -->
             <div
               id="gemini-analysis-block"
               class="p-4 bg-emerald-50 rounded-lg border-l-4 border-emerald-500 hidden"
@@ -556,9 +494,7 @@
                 </svg>
                 <span>Gemini AI Analysis:</span>
               </h4>
-              <div id="gemini-analysis-content" class="text-gray-600">
-                <!-- Analysis content and loading spinner will be placed here -->
-              </div>
+              <div id="gemini-analysis-content" class="text-gray-600"></div>
               <div
                 id="gemini-sources"
                 class="mt-3 text-xs text-gray-500 hidden"
@@ -593,694 +529,12 @@
     &copy; 2025 University Updates
   </footer>
 
-  <!-- Scroll to top button (optional) -->
+  <!-- Scroll to top button -->
   <button id="topBtn" title="Go to top">
     <i class="fas fa-arrow-up"></i>
   </button>
 
-  <script>
-    // =============== SIMPLE NAV + TOP BUTTON ===============
-    const menuBtn = document.getElementById("menu-btn");
-    const mobileMenu = document.getElementById("mobile-menu");
-    const btnAbout = document.getElementById("btn-about");
-    const mobileAbout = document.getElementById("mobile-about");
-    const topBtn = document.getElementById("topBtn");
-
-    if (menuBtn && mobileMenu) {
-      menuBtn.addEventListener("click", () => {
-        mobileMenu.classList.toggle("hidden");
-      });
-    }
-
-    if (btnAbout && mobileAbout) {
-      btnAbout.addEventListener("click", () => {
-        mobileAbout.classList.toggle("hidden");
-      });
-    }
-
-    window.addEventListener("scroll", () => {
-      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-        topBtn.style.display = "block";
-      } else {
-        topBtn.style.display = "none";
-      }
-    });
-
-    topBtn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-    // =========================
-    // QUIZ TOOL LOGIC
-    // =========================
-
-    // --- DATA STRUCTURE (Only for navigation and translation) ---
-    const quizData = {
-      english: {
-        "Business Organisation": {
-          "Unit 1: Fundamentals": [],
-          "Unit 2: Forms of Business": [],
-          "Unit 3: Management Basics": [],
-          "Unit 4: Social Responsibility": [],
-          "Unit 5: Aids to Trade": [],
-        },
-        "Business Statistics": {
-          "Unit 1: Central Tendency": [],
-          "Unit 2: Dispersion": [],
-          "Unit 3: Probability": [],
-          "Unit 4: Correlation & Regression": [],
-          "Unit 5: Index Numbers": [],
-        },
-        "Business Communication": {
-          "Unit 1: Fundamentals & Process": [],
-          "Unit 2: The 7 Cs": [],
-          "Unit 3: Barriers": [],
-          "Unit 4: Written Communication": [],
-          "Unit 5: Non-Verbal Communication": [],
-        },
-        "Introduction to Computer Applications": {
-          "Unit 1: Hardware & Software": [],
-          "Unit 2: Input/Output Devices": [],
-          "Unit 3: Memory & Storage": [],
-          "Unit 4: Operating System & Utility": [],
-          "Unit 5: Internet & Networking": [],
-        },
-      },
-      hindi: {
-        "व्यापार संगठन": {
-          "इकाई 1: मूल सिद्धांत": [],
-          "इकाई 2: व्यावसायिक स्वरूप": [],
-          "इकाई 3: प्रबंधन के मूल सिद्धांत": [],
-          "इकाई 4: सामाजिक जिम्मेदारी": [],
-          "इकाई 5: व्यापार के सहायक": [],
-        },
-        "व्यावसायिक सांख्यिकी": {
-          "इकाई 1: केंद्रीय प्रवृत्ति": [],
-          "इकाई 2: फैलाव (Dispersion)": [],
-          "इकाई 3: प्रायिकता": [],
-          "इकाई 4: सहसंबंध और प्रतिगमन": [],
-          "इकाई 5: सूचकांक संख्याएँ": [],
-        },
-        "व्यावसायिक संचार": {
-          "इकाई 1: मूल सिद्धांत और प्रक्रिया": [],
-          "इकाई 2: 7 C's": [],
-          "इकाई 3: बाधाएँ": [],
-          "इकाई 4: लिखित संचार": [],
-          "इकाई 5: गैर-मौखिक संचार": [],
-        },
-        "कंप्यूटर अनुप्रयोगों का परिचय": {
-          "इकाई 1: हार्डवेयर और सॉफ्टवेयर": [],
-          "इकाई 2: इनपुट/आउटपुट डिवाइस": [],
-          "इकाई 3: मेमोरी और स्टोरेज": [],
-          "इकाई 4: ऑपरेटिंग सिस्टम और यूटिलिटी": [],
-          "इकाई 5: इंटरनेट और नेटवर्किंग": [],
-        },
-      },
-    };
-
-    // --- GLOBAL STATE ---
-    let currentLanguage = "english";
-    let currentSubject = "";
-    let currentUnit = "";
-    let currentQuestionIndex = 0;
-    let selectedOptionIndex = null;
-    let questionSet = [];
-
-    // ✅ NEW: cache questions per language/subject/unit
-    const savedQuestions = {
-      english: {},
-      hindi: {},
-    };
-
-    const API_KEY = "AIzaSyBJuy8fJKZGuv2wJC9gVQUL_7lWvepXloY"; // ⬅️ Put your key here
-    const MODEL_ID = "gemini-2.5-flash-preview-09-2025";
-    const NUMBER_OF_QUESTIONS = 100;
-
-    // --- DOM Elements ---
-    const dom = {
-      langSwitchBtn: document.getElementById("language-switch-btn"),
-      subjectList: document.getElementById("subject-list"),
-      unitSection: document.getElementById("unit-section"),
-      unitList: document.getElementById("unit-list"),
-      quizContainer: document.getElementById("quiz-container"),
-      welcomeMessage: document.getElementById("welcome-message"),
-      loadingQuestions: document.getElementById("loading-questions"),
-      questionCard: document.getElementById("question-card"),
-      questionText: document.getElementById("question-text"),
-      optionsContainer: document.getElementById("options-container"),
-      checkAnswerBtn: document.getElementById("check-answer-btn"),
-      explanationBtn: document.getElementById("explanation-btn"),
-      nextQuestionBtn: document.getElementById("next-question-btn"),
-      geminiAiBtn: document.getElementById("gemini-ai-btn"),
-      geminiBtnText: document.getElementById("gemini-btn-text"),
-      feedbackArea: document.getElementById("feedback-area"),
-      resultMessage: document.getElementById("result-message"),
-      explanationBlock: document.getElementById("explanation-block"),
-      explanationText: document.getElementById("explanation-text"),
-      geminiAnalysisBlock: document.getElementById("gemini-analysis-block"),
-      geminiAnalysisContent: document.getElementById("gemini-analysis-content"),
-      geminiSources: document.getElementById("gemini-sources"),
-      currentUnitInfo: document.getElementById("current-unit-info"),
-      questionCounter: document.getElementById("question-counter"),
-      selectorTitle: document.getElementById("selector-title"),
-      unitTitle: document.getElementById("unit-title"),
-      geminiAnalysisHeading: document.getElementById("gemini-analysis-heading"),
-      sourcesHeading: document.getElementById("sources-heading"),
-      sourcesList: document.getElementById("sources-list"),
-    };
-
-    // --- UTILITY FUNCTIONS ---
-    async function fetchWithRetry(url, options, maxRetries = 3) {
-      for (let i = 0; i < maxRetries; i++) {
-        try {
-          const response = await fetch(url, options);
-          if (!response.ok) {
-            if (response.status === 429 && i < maxRetries - 1) {
-              const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-              await new Promise((resolve) => setTimeout(resolve, delay));
-              continue;
-            }
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response;
-        } catch (error) {
-          console.error(`Fetch attempt ${i + 1} failed:`, error);
-          if (i === maxRetries - 1) throw error;
-          const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-          await new Promise((resolve) => setTimeout(resolve, delay));
-        }
-      }
-    }
-
-    // --- QUESTION GENERATION LOGIC ---
-    async function generateQuestions(subject, unit, language) {
-      const isEnglish = language === "english";
-
-      if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
-        dom.welcomeMessage.classList.remove("hidden");
-        dom.loadingQuestions.classList.add("hidden");
-        dom.questionCard.classList.add("hidden");
-        dom.welcomeMessage.textContent = isEnglish
-          ? "Please set your Gemini API key in the code (API_KEY constant)."
-          : "कृपया कोड में अपना जेमिनी API कुंजी (API_KEY) सेट करें।";
-        return;
-      }
-
-      dom.welcomeMessage.classList.add("hidden");
-      dom.questionCard.classList.add("hidden");
-      dom.loadingQuestions.classList.remove("hidden");
-
-      const targetLang = isEnglish ? "English" : "Hindi";
-
-      const systemPrompt = `You are a specialist in creating challenging and concept-based Multiple Choice Questions (MCQs) for 1st-semester undergraduate commerce students.
-Your task is to generate exactly ${NUMBER_OF_QUESTIONS} MCQs for the subject "${subject}" under the unit "${unit}".
-Each question must have 4 distinct options and one clear correct answer.
-Provide a detailed, accurate explanation for why the chosen answer is correct.
-The entire response must be a valid JSON array matching the provided schema, and all text (question, options, explanation) must be in ${targetLang}.`;
-
-      const userQuery = `Generate ${NUMBER_OF_QUESTIONS} fresh, challenging MCQs for the topic: ${subject} - ${unit}. Ensure all output is in ${targetLang}.`;
-
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${API_KEY}`;
-
-      const payload = {
-        contents: [{ parts: [{ text: userQuery }] }],
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "ARRAY",
-            description: `A list of ${NUMBER_OF_QUESTIONS} multiple-choice questions.`,
-            items: {
-              type: "OBJECT",
-              properties: {
-                q: { type: "STRING", description: "The question text." },
-                options: {
-                  type: "ARRAY",
-                  items: { type: "STRING" },
-                  description: "Four possible answers for the MCQ.",
-                },
-                ans: {
-                  type: "INTEGER",
-                  description:
-                    "The zero-based index of the correct option (0, 1, 2, or 3).",
-                },
-                exp: {
-                  type: "STRING",
-                  description:
-                    "A detailed explanation for the correct answer.",
-                },
-              },
-              required: ["q", "options", "ans", "exp"],
-            },
-          },
-        },
-      };
-
-      try {
-        const response = await fetchWithRetry(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        const result = await response.json();
-        const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (jsonText) {
-          const parsedQuestions = JSON.parse(jsonText);
-          if (Array.isArray(parsedQuestions) && parsedQuestions.length > 0) {
-            questionSet = parsedQuestions;
-            currentQuestionIndex = 0;
-
-            // ✅ SAVE in cache for current language + subject + unit
-            if (!savedQuestions[language][subject]) {
-              savedQuestions[language][subject] = {};
-            }
-            savedQuestions[language][subject][unit] = parsedQuestions;
-
-            dom.loadingQuestions.classList.add("hidden");
-            dom.questionCard.classList.remove("hidden");
-            renderQuestion();
-            return;
-          }
-        }
-        throw new Error("Invalid or empty JSON response from API.");
-      } catch (error) {
-        console.error("Question Generation Error:", error);
-        dom.loadingQuestions.classList.add("hidden");
-        dom.welcomeMessage.classList.remove("hidden");
-        dom.welcomeMessage.textContent = isEnglish
-          ? `Error generating questions for ${unit}. Please check your API key or try again.`
-          : `${unit} के लिए प्रश्न बनाने में त्रुटि। कृपया अपनी API कुंजी जांचें या पुनः प्रयास करें।`;
-      }
-    }
-
-    // --- GEMINI AI ANALYSIS LOGIC ---
-    async function analyzeQuestionWithGemini() {
-      if (!currentSubject || !currentUnit || !questionSet.length) return;
-      if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
-        dom.geminiAnalysisBlock.classList.remove("hidden");
-        dom.geminiAnalysisContent.innerHTML =
-          '<p class="text-red-600 text-sm">Please set your Gemini API key in the code (API_KEY constant).</p>';
-        return;
-      }
-
-      const currentQuestion = questionSet[currentQuestionIndex];
-      const questionText =
-        currentQuestion.q +
-        " Options: " +
-        currentQuestion.options.join(", ") +
-        ". Correct answer index: " +
-        currentQuestion.ans;
-
-      dom.geminiAnalysisBlock.classList.remove("hidden");
-      dom.geminiAnalysisContent.innerHTML =
-        '<div class="flex items-center space-x-2 text-emerald-600"><svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Analyzing...</span></div>';
-      dom.geminiAiBtn.disabled = true;
-      dom.geminiAiBtn.classList.add("opacity-50", "cursor-not-allowed");
-      dom.sourcesList.innerHTML = "";
-      dom.geminiSources.classList.add("hidden");
-
-      const systemPrompt = `You are an expert commerce and finance tutor for 1st-semester university students. Your goal is to provide a concise, single-paragraph analysis of the multiple-choice question provided.
-1. Clearly explain the core concept being tested.
-2. Explain why the correct option is the definitive answer.
-3. Briefly explain why the other options are incorrect.
-4. Maintain a professional and encouraging tone.`;
-
-      const userQuery = `Analyze the following commerce MCQ from the unit "${currentSubject} - ${currentUnit}". The question is: "${questionText}". Provide the analysis in ${
-        currentLanguage === "english" ? "English" : "Hindi"
-      }.`
-
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${API_KEY}`;
-
-      const payload = {
-        contents: [{ parts: [{ text: userQuery }] }],
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-      };
-
-      try {
-        const response = await fetchWithRetry(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        const result = await response.json();
-        const candidate = result.candidates?.[0];
-
-        if (candidate && candidate.content?.parts?.[0]?.text) {
-          const text = candidate.content.parts[0].text;
-          dom.geminiAnalysisContent.innerHTML = `<p class="text-gray-700 text-sm leading-relaxed">${text}</p>`;
-
-          // If grounding info exists, show it
-          let sources = [];
-          const groundingMetadata =
-            candidate.groundingMetadata || result.groundingMetadata;
-          if (
-            groundingMetadata &&
-            groundingMetadata.groundingAttributions
-          ) {
-            sources = groundingMetadata.groundingAttributions
-              .map((attribution) => ({
-                uri: attribution.web?.uri,
-                title: attribution.web?.title,
-              }))
-              .filter((source) => source.uri && source.title);
-          }
-
-          if (sources.length > 0) {
-            dom.sourcesList.innerHTML = sources
-              .map(
-                (source) =>
-                  `<li><a href="${source.uri}" target="_blank" class="text-blue-500 hover:text-blue-700 underline">${source.title ||
-                    "Source Link"}</a></li>`
-              )
-              .join("");
-            dom.geminiSources.classList.remove("hidden");
-          }
-        } else {
-          dom.geminiAnalysisContent.innerHTML =
-            '<p class="text-red-600 text-sm">AI analysis failed. Please try again later.</p>';
-        }
-      } catch (error) {
-        console.error("Gemini API Error:", error);
-        dom.geminiAnalysisContent.innerHTML =
-          '<p class="text-red-600 text-sm">Failed to connect to the AI service. Check your network or API key.</p>';
-      } finally {
-        dom.geminiAiBtn.disabled = false;
-        dom.geminiAiBtn.classList.remove("opacity-50", "cursor-not-allowed");
-      }
-    }
-
-    // --- RENDERING FUNCTIONS ---
-    function updateTexts() {
-      const isEnglish = currentLanguage === "english";
-      dom.langSwitchBtn.textContent = isEnglish
-        ? "हिंदी में बदलें"
-        : "Switch to English";
-      dom.selectorTitle.textContent = isEnglish
-        ? "Select Subject"
-        : "विषय चुनें";
-      dom.unitTitle.textContent = isEnglish ? "Select Unit" : "इकाई चुनें";
-      dom.welcomeMessage.textContent = isEnglish
-        ? "Welcome! Please select a subject and a unit to begin your MCQ test."
-        : "स्वागत है! कृपया अपना MCQ परीक्षण शुरू करने के लिए एक विषय और एक इकाई चुनें।";
-      dom.checkAnswerBtn.textContent = isEnglish
-        ? "Check Answer"
-        : "उत्तर जांचें";
-      dom.explanationBtn.textContent = isEnglish
-        ? "Show Explanation"
-        : "स्पष्टीकरण दिखाएँ";
-      dom.nextQuestionBtn.textContent = isEnglish
-        ? "Next Question"
-        : "अगला प्रश्न";
-      dom.geminiBtnText.textContent = isEnglish
-        ? "Analyze with Gemini AI"
-        : "जेमिनी एआई से विश्लेषण करें";
-      document.getElementById("explanation-heading").textContent = isEnglish
-        ? "Explanation:"
-        : "स्पष्टीकरण:";
-      const headingLabelSpan =
-        dom.geminiAnalysisHeading.querySelector("span:last-child");
-      if (headingLabelSpan) {
-        headingLabelSpan.textContent = isEnglish
-          ? "Gemini AI Analysis:"
-          : "जेमिनी एआई विश्लेषण:";
-      }
-      dom.sourcesHeading.textContent = isEnglish ? "Sources:" : "स्रोत:";
-    }
-
-    function renderSubjects() {
-      const subjects = Object.keys(quizData[currentLanguage]);
-      dom.subjectList.innerHTML = "";
-      dom.unitSection.classList.add("hidden");
-      dom.questionCard.classList.add("hidden");
-      dom.loadingQuestions.classList.add("hidden");
-      dom.welcomeMessage.classList.remove("hidden");
-
-      subjects.forEach((subject) => {
-        const isActive = subject === currentSubject;
-        const button = document.createElement("button");
-        button.textContent = subject;
-        button.className =
-          "w-full text-left py-2 px-4 rounded-lg font-medium transition duration-150 " +
-          (isActive
-            ? "bg-indigo-500 text-white shadow-md"
-            : "bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-600");
-        button.onclick = () => selectSubject(subject);
-        dom.subjectList.appendChild(button);
-      });
-
-      if (currentSubject) {
-        dom.welcomeMessage.classList.add("hidden");
-        dom.unitSection.classList.remove("hidden");
-        renderUnits(currentSubject);
-      } else {
-        currentUnit = "";
-      }
-    }
-
-    function renderUnits(subject) {
-      const units = Object.keys(quizData[currentLanguage][subject]);
-      dom.unitList.innerHTML = "";
-
-      units.forEach((unit) => {
-        const isActive = unit === currentUnit;
-        const button = document.createElement("button");
-        button.textContent = unit;
-        button.className =
-          "w-full md:w-auto text-left py-2 px-4 rounded-lg text-sm transition duration-150 " +
-          (isActive
-            ? "bg-indigo-400 text-white shadow-sm"
-            : "bg-white border border-gray-200 text-gray-700 hover:bg-indigo-50 hover:text-indigo-500");
-        button.onclick = () => selectUnit(unit);
-        dom.unitList.appendChild(button);
-      });
-
-      if (currentUnit && questionSet.length > 0) {
-        dom.questionCard.classList.remove("hidden");
-        renderQuestion();
-      }
-    }
-
-    function renderQuestion() {
-      if (questionSet.length === 0) return;
-
-      const qData = questionSet[currentQuestionIndex];
-      const isEnglish = currentLanguage === "english";
-      const totalQuestions = questionSet.length;
-
-      selectedOptionIndex = null;
-      dom.resultMessage.classList.add("hidden");
-      dom.explanationBlock.classList.add("hidden");
-      dom.nextQuestionBtn.classList.add("hidden");
-      dom.checkAnswerBtn.classList.remove("hidden");
-      dom.explanationBtn.classList.add("hidden");
-      dom.checkAnswerBtn.disabled = true;
-      dom.checkAnswerBtn.classList.add("opacity-50", "cursor-not-allowed");
-      dom.geminiAnalysisBlock.classList.add("hidden");
-      dom.geminiAiBtn.disabled = false;
-      dom.geminiAiBtn.classList.remove("opacity-50", "cursor-not-allowed");
-
-      dom.currentUnitInfo.textContent = `${currentSubject} / ${currentUnit}`;
-      dom.questionCounter.textContent = isEnglish
-        ? `Question ${currentQuestionIndex + 1} of ${totalQuestions}`
-        : `प्रश्न ${currentQuestionIndex + 1} / ${totalQuestions}`;
-      dom.questionText.textContent = qData.q;
-      dom.optionsContainer.innerHTML = "";
-
-      qData.options.forEach((option, index) => {
-        const button = document.createElement("button");
-        button.textContent = option;
-        button.dataset.index = index;
-        button.className =
-          "option-button w-full text-left p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 text-gray-800 transition duration-150";
-        button.onclick = handleOptionSelection;
-        dom.optionsContainer.appendChild(button);
-      });
-    }
-
-    function handleOptionSelection(event) {
-      const allOptions = dom.optionsContainer.querySelectorAll(".option-button");
-      const clickedButton = event.target.closest(".option-button");
-      if (!clickedButton) return;
-
-      allOptions.forEach((btn) =>
-        btn.classList.remove(
-          "selected-option",
-          "correct-answer",
-          "incorrect-answer",
-          "font-bold"
-        )
-      );
-      clickedButton.classList.add("selected-option");
-
-      selectedOptionIndex = parseInt(clickedButton.dataset.index, 10);
-      dom.checkAnswerBtn.disabled = false;
-      dom.checkAnswerBtn.classList.remove("opacity-50", "cursor-not-allowed");
-    }
-
-    function checkAnswer() {
-      if (selectedOptionIndex === null) return;
-
-      const currentQuestion = questionSet[currentQuestionIndex];
-      const correctIndex = currentQuestion.ans;
-      const isCorrect = selectedOptionIndex === correctIndex;
-      const options = dom.optionsContainer.querySelectorAll(".option-button");
-      const isEnglish = currentLanguage === "english";
-
-      options.forEach((btn) => (btn.onclick = null));
-      dom.checkAnswerBtn.classList.add("hidden");
-      dom.explanationBtn.classList.remove("hidden");
-
-      dom.resultMessage.classList.remove(
-        "hidden",
-        "bg-red-100",
-        "bg-green-100",
-        "text-red-800",
-        "text-green-800"
-      );
-      if (isCorrect) {
-        dom.resultMessage.classList.add("bg-green-100", "text-green-800");
-        dom.resultMessage.textContent = isEnglish
-          ? "Result: Correct Answer! 🎉"
-          : "परिणाम: सही उत्तर! 🎉";
-      } else {
-        dom.resultMessage.classList.add("bg-red-100", "text-red-800");
-        dom.resultMessage.textContent = isEnglish
-          ? "Result: Incorrect. Review the explanation."
-          : "परिणाम: गलत। स्पष्टीकरण की समीक्षा करें।";
-      }
-
-      options.forEach((btn, index) => {
-        btn.classList.remove("selected-option");
-        if (index === correctIndex) {
-          btn.classList.add("correct-answer", "font-bold");
-        } else if (index === selectedOptionIndex && !isCorrect) {
-          btn.classList.add("incorrect-answer", "font-bold");
-        }
-      });
-
-      dom.nextQuestionBtn.classList.remove("hidden");
-    }
-
-    function showExplanation() {
-      const currentQuestion = questionSet[currentQuestionIndex];
-      dom.explanationText.textContent = currentQuestion.exp;
-      dom.explanationBlock.classList.toggle("hidden");
-      dom.explanationBtn.textContent = dom.explanationBlock.classList.contains(
-        "hidden"
-      )
-        ? currentLanguage === "english"
-          ? "Show Explanation"
-          : "स्पष्टीकरण दिखाएँ"
-        : currentLanguage === "english"
-        ? "Hide Explanation"
-        : "स्पष्टीकरण छिपाएँ";
-    }
-
-    // --- CONTROLLERS ---
-    function selectSubject(subject) {
-      currentSubject = subject;
-      currentUnit = "";
-      questionSet = [];
-      renderSubjects();
-      dom.unitSection.classList.remove("hidden");
-      dom.questionCard.classList.add("hidden");
-    }
-
-    function selectUnit(unit) {
-      if (currentUnit === unit && questionSet.length > 0) return;
-
-      currentUnit = unit;
-
-      // ✅ Try to load cached questions first for current language/subject/unit
-      const cached =
-        savedQuestions[currentLanguage]?.[currentSubject]?.[currentUnit];
-
-      if (cached && cached.length) {
-        questionSet = cached;
-        currentQuestionIndex = 0;
-        dom.welcomeMessage.classList.add("hidden");
-        dom.loadingQuestions.classList.add("hidden");
-        dom.questionCard.classList.remove("hidden");
-        renderQuestion();
-      } else {
-        questionSet = [];
-        dom.questionCard.classList.add("hidden");
-        generateQuestions(currentSubject, currentUnit, currentLanguage);
-      }
-    }
-
-    function goToNextQuestion() {
-      dom.resultMessage.classList.add("hidden");
-      dom.explanationBlock.classList.add("hidden");
-      dom.geminiAnalysisBlock.classList.add("hidden");
-      dom.nextQuestionBtn.classList.add("hidden");
-
-      if (currentQuestionIndex < questionSet.length - 1) {
-        currentQuestionIndex++;
-        renderQuestion();
-      } else {
-        dom.questionCard.classList.add("hidden");
-        dom.welcomeMessage.classList.remove("hidden");
-        dom.welcomeMessage.textContent =
-          currentLanguage === "english"
-            ? `You have completed Unit ${currentUnit} of ${currentSubject}! Select another unit or subject to generate a new test.`
-            : `आपने ${currentSubject} की इकाई ${currentUnit} पूरी कर ली है! नया टेस्ट जनरेट करने के लिए कोई अन्य इकाई या विषय चुनें।`;
-        currentUnit = "";
-        questionSet = [];
-        renderSubjects();
-      }
-    }
-
-    function toggleLanguage() {
-      // switch language
-      currentLanguage =
-        currentLanguage === "english" ? "hindi" : "english";
-
-      // update static UI texts (buttons/headings/etc.)
-      updateTexts();
-
-      // If no subject/unit is selected, just re-render subjects in new language
-      if (!currentSubject || !currentUnit) {
-        // Just reset currentSubject/currentUnit mapping to new language labels
-        currentSubject = "";
-        currentUnit = "";
-        questionSet = [];
-        renderSubjects();
-        return;
-      }
-
-      // Try to use already generated questions in new language
-      const cached =
-        savedQuestions[currentLanguage]?.[currentSubject]?.[currentUnit];
-
-      if (cached && cached.length) {
-        questionSet = cached;
-        currentQuestionIndex = 0;
-        dom.welcomeMessage.classList.add("hidden");
-        dom.loadingQuestions.classList.add("hidden");
-        dom.questionCard.classList.remove("hidden");
-        renderQuestion();
-      } else {
-        // No cached questions in this language yet – generate in new language
-        dom.welcomeMessage.classList.add("hidden");
-        generateQuestions(currentSubject, currentUnit, currentLanguage);
-      }
-    }
-
-    // --- EVENT LISTENERS & INITIALIZATION ---
-    dom.langSwitchBtn.addEventListener("click", toggleLanguage);
-    dom.checkAnswerBtn.addEventListener("click", checkAnswer);
-    dom.nextQuestionBtn.addEventListener("click", goToNextQuestion);
-    dom.explanationBtn.addEventListener("click", showExplanation);
-    dom.geminiAiBtn.addEventListener("click", analyzeQuestionWithGemini);
-
-    (function init() {
-      updateTexts();
-      renderSubjects();
-    })();
-  </script>
+  <!-- LINK TO SEPARATE JS FILE -->
+  <script src="MCQ/quiz.js"></script>
 </body>
 </html>

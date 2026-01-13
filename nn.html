@@ -1,1 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CCS University Notices</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f2f4f8;
+            color: #333;
+        }
+
+        header {
+            background: #003c8f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .notice {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .notice h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        .notice h3 a {
+            color: #003c8f;
+            text-decoration: none;
+        }
+
+        .notice h3 a:hover {
+            text-decoration: underline;
+        }
+
+        .notice p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .loading, .error {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 30px;
+        }
+
+        footer {
+            background: #e0e0e0;
+            text-align: center;
+            padding: 10px;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>CCS University Notices</h1>
+</header>
+
+<main>
+    <div id="container" class="loading">
+        Loading notices...
+    </div>
+</main>
+
+<footer>
+    Powered by CCS University API
+</footer>
+
+<script>
+    const container = document.getElementById("container");
+
+    const API_URL =
+        "https://api.allorigins.win/raw?url=" +
+        encodeURIComponent(
+            "https://api.ccsuniversity.ac.in/news/search?title=&id=Notice&month=&year=&page=1"
+        );
+
+    async function loadNotices() {
+        try {
+            const response = await fetch(API_URL);
+
+            if (!response.ok) {
+                throw new Error("Network error");
+            }
+
+            const data = await response.json();
+            const notices = data.news;
+
+            if (!notices || notices.length === 0) {
+                container.innerHTML =
+                    "<p class='error'>No notices found.</p>";
+                return;
+            }
+
+            container.innerHTML = "";
+
+            notices.forEach(n => {
+                const div = document.createElement("div");
+                div.className = "notice";
+
+                div.innerHTML = `
+                    <h3>
+                        <a href="${n.url}" target="_blank" rel="noopener">
+                            ${n.title}
+                        </a>
+                    </h3>
+                    <p>📅 ${new Date(n.created_at).toLocaleDateString()}</p>
+                `;
+
+                container.appendChild(div);
+            });
+
+        } catch (err) {
+            container.innerHTML =
+                "<p class='error'>Failed to load notices.</p>";
+            console.error(err);
+        }
+    }
+
+    loadNotices();
+</script>
+
+</body>
+</html>

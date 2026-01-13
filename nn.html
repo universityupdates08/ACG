@@ -1,88 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>CCS University Notices</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>CCS University Notices</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="alternate" type="application/rss+xml" title="CCS University Notices RSS" href="rss.xml">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f2f4f8;
+            color: #333;
+        }
 
-<style>
-body { margin:0; font-family:Arial,sans-serif; background:#f4f6f8 }
-header { background:#0b3c5d; color:#fff; padding:18px; text-align:center }
-main { max-width:1100px; margin:auto; padding:18px }
-section { background:#fff; border-radius:6px; padding:18px; box-shadow:0 2px 8px rgba(0,0,0,.08) }
-.notice { border-bottom:1px solid #e5e5e5; padding:12px 0 }
-.notice:last-child { border-bottom:none }
-.notice a { color:#0b3c5d; font-weight:bold; text-decoration:none }
-.notice a:hover { text-decoration:underline }
-.date { font-size:13px; color:#555 }
-#error { color:red; text-align:center }
-</style>
+        header {
+            background: #003c8f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .notice {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .notice h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        .notice h3 a {
+            color: #003c8f;
+            text-decoration: none;
+        }
+
+        .notice h3 a:hover {
+            text-decoration: underline;
+        }
+
+        .notice p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .loading, .error {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 30px;
+        }
+
+        footer {
+            background: #e0e0e0;
+            text-align: center;
+            padding: 10px;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+    </style>
 </head>
-
 <body>
 
 <header>
-  <h1>Chaudhary Charan Singh University, Meerut:</h1>
-  <p>Auto-updating official notifications</p>
+    <h1>CCS University Notices</h1>
 </header>
 
 <main>
-<section>
-  <h3>Latest Notices</h3>
-  <div id="error"></div>
-  <div id="newsList"></div>
-</section>
+    <div id="container" class="loading">
+        Loading notices...
+    </div>
 </main>
 
+<footer>
+    Powered by CCS University API
+</footer>
+
 <script>
-const API_URL = "https://api.ccsuniversity.ac.in/news/search?title=&id=Notice&month=&year=&page=1";
-let lastHash = "";
+    const container = document.getElementById("container");
 
-async function fetchNews() {
-  try {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error("API error");
-    const data = await res.json();
+    const API_URL =
+        "https://api.allorigins.win/raw?url=" +
+        encodeURIComponent(
+            "https://api.ccsuniversity.ac.in/news/search?title=&id=Notice&month=&year=&page=1"
+        );
 
-    const hash = JSON.stringify(data.news);
-    if (hash === lastHash) return; // 🔥 prevents reload
+    async function loadNotices() {
+        try {
+            const response = await fetch(API_URL);
 
-    lastHash = hash;
-    renderNews(data.news);
+            if (!response.ok) {
+                throw new Error("Network error");
+            }
 
-  } catch {
-    document.getElementById("error").textContent =
-      "Unable to fetch notices at the moment.";
-  }
-}
+            const data = await response.json();
+            const notices = data.news;
 
-function renderNews(news) {
-  const list = document.getElementById("newsList");
-  list.innerHTML = "";
+            if (!notices || notices.length === 0) {
+                container.innerHTML =
+                    "<p class='error'>No notices found.</p>";
+                return;
+            }
 
-  if (!news || !news.length) {
-    list.innerHTML = "<p>No notices available.</p>";
-    return;
-  }
+            container.innerHTML = "";
 
-  news.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "notice";
-    div.innerHTML = `
-      <a href="${item.url}" target="_blank">${item.title}</a>
-      <div class="date">${new Date(item.created_at).toDateString()}</div>
-    `;
-    list.appendChild(div);
-  });
-}
+            notices.forEach(n => {
+                const div = document.createElement("div");
+                div.className = "notice";
 
-// single initial load
-fetchNews();
+                div.innerHTML = `
+                    <h3>
+                        <a href="${n.url}" target="_blank" rel="noopener">
+                            ${n.title}
+                        </a>
+                    </h3>
+                    <p>📅 ${new Date(n.created_at).toLocaleDateString()}</p>
+                `;
 
-// refresh every 60s WITHOUT reload
-setInterval(fetchNews, 60000);
+                container.appendChild(div);
+            });
+
+        } catch (err) {
+            container.innerHTML =
+                "<p class='error'>Failed to load notices.</p>";
+            console.error(err);
+        }
+    }
+
+    loadNotices();
 </script>
 
 </body>

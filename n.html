@@ -11,7 +11,6 @@
             --accent-color: #d32f2f;
             --text-color: #333;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f9f9f9; color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
 
@@ -32,6 +31,7 @@
         .category-btn {
             display: block; width: 100%; text-align: left; padding: 10px; margin-bottom: 5px;
             background: var(--secondary-color); border: none; border-radius: 4px; cursor: pointer; transition: 0.2s;
+            font-size: 0.95rem;
         }
         .category-btn:hover, .category-btn.active { background: #e0e0e0; color: var(--primary-color); font-weight: bold; border-left: 4px solid var(--primary-color); }
 
@@ -72,7 +72,12 @@
     <aside>
         <h3>Categories</h3>
         <ul class="category-list" id="categoryContainer">
-            <li>Loading menu...</li>
+            <li><button class="category-btn active" onclick="manualSelect('Notice')">Notice</button></li>
+            <li><button class="category-btn" onclick="manualSelect('Press Release')">Press Release</button></li>
+            <li><button class="category-btn" onclick="manualSelect('Syllabus')">Syllabus</button></li>
+            <li><button class="category-btn" onclick="manualSelect('Date Sheet')">Date Sheet</button></li>
+            <li><button class="category-btn" onclick="manualSelect('Admit Card')">Admit Card</button></li>
+            <li><button class="category-btn" onclick="manualSelect('Result')">Result</button></li>
         </ul>
     </aside>
 
@@ -93,44 +98,47 @@
     async function fetchNews(categoryName = "Notice") {
         currentCategory = categoryName;
         const container = document.getElementById('newsContainer');
-        const catContainer = document.getElementById('categoryContainer');
         const headerTitle = document.getElementById('currentCategoryTitle');
 
         headerTitle.innerText = categoryName;
 
+        // Update active button state
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if(btn.innerText === categoryName) btn.classList.add('active');
+        });
+
         // Show loading ONLY if the container is empty (first load or manual switch)
-        if(container.innerHTML.trim() === "") {
-             container.innerHTML = '<div class="loading">⏳ Connecting to CCSU via Proxy...</div>';
+        if(container.innerHTML.trim() === "") { 
+            container.innerHTML = '<div class="loading">⏳ Fetching Updates via Proxy...</div>';
         }
 
         try {
-            // 1. Target URL
-            const targetUrl = `https://api.ccsuniversity.ac.in/news/search?title=&id=${categoryName}&month=&year=&page=1`;
+            // 1. Target URL (Random number added to prevent caching)
+            const targetUrl = `https://api.ccsuniversity.ac.in/news/search?title=&id=${categoryName}&month=&year=&page=1&_=${new Date().getTime()}`;
             
-            // 2. USE PROXY (Fixes the "Loading" stuck issue)
-            // We use 'allorigins' to bypass the university security blocks
+            // 2. USE ALLORIGINS (Most permissive proxy)
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
 
             // 3. Fetch Data
             const response = await fetch(proxyUrl);
             if (!response.ok) throw new Error(`Network Error: ${response.status}`);
             
+            // 4. Parse Proxy Response
             const proxyData = await response.json();
             
-            // 4. Parse the actual JSON content inside the proxy response
-            const data = JSON.parse(proxyData.contents);
-
-            // 5. Update Categories
-            if (data.categories) {
-                catContainer.innerHTML = ''; 
-                Object.values(data.categories).forEach(cat => {
-                    const li = document.createElement('li');
-                    const isActive = cat.name === currentCategory ? 'active' : '';
-                    li.innerHTML = `<button class="category-btn ${isActive}" onclick="manualSelect('${cat.name}')">${cat.name}</button>`;
-                    catContainer.appendChild(li);
-                });
+            // 5. Parse "Contents" string safely
+            if (!proxyData.contents) throw new Error("Empty response from proxy");
+            
+            let data;
+            try {
+                data = JSON.parse(proxyData.contents);
+            } catch (e) {
+                // If contents are HTML (error page) or invalid JSON
+                console.error("JSON Parse Error:", proxyData.contents);
+                throw new Error("University server returned invalid data.");
             }
-
+            
             // 6. Update News Content
             if (data.news && data.news.length > 0) {
                 let htmlContent = '';
@@ -157,13 +165,13 @@
 
         } catch (error) {
             console.error("Fetch error:", error);
-            // Only show error if we have no data on screen
-            if(container.innerHTML.includes("Loading") || container.innerHTML.trim() === "") {
+            // Only show error UI if we don't have old data shown
+            if(container.innerHTML.includes("Fetching") || container.innerHTML.trim() === "") {
                 container.innerHTML = `
-                    <div class="loading" style="color: red;">
-                        <strong>Connection Failed!</strong><br>
+                    <div class="loading" style="color: #d32f2f;">
+                        <strong>Connection Issue</strong><br>
                         <small>${error.message}</small><br>
-                        <small>The Proxy might be overloaded. Retrying in 30s...</small>
+                        <button onclick="fetchNews('${currentCategory}')" style="margin-top:10px; padding:5px 10px; cursor:pointer;">Retry Now</button>
                     </div>
                 `;
             }

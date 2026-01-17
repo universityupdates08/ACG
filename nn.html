@@ -1,142 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>CCS University Notices</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  /* --- 1. BASE STYLES --- */
+  body { 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+    background: #ffffff; 
+    padding: 10px; 
+    margin: 0; 
+  }
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f2f4f8;
-            color: #333;
-        }
+  /* Header */
+  .feed-header {
+    border-bottom: 2px solid #003366; /* University Blue */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    color: #003366;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-        header {
-            background: #003c8f;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+  /* Status Badge (Live/Loading) */
+  .badge {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: #f0f0f0;
+    color: #666;
+    font-weight: normal;
+  }
 
-        main {
-            max-width: 1000px;
-            margin: auto;
-            padding: 20px;
-        }
+  /* --- 2. NEWS CARD STYLES --- */
+  .news-container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+  }
+  
+  .news-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa; /* Light Gray */
+    border-left: 5px solid #003366;
+    padding: 12px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.2s;
+    border: 1px solid #eee;
+  }
 
-        .notice {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
+  .news-card:hover { 
+    background: #e9ecef; 
+  }
 
-        .notice h3 {
-            margin: 0 0 8px;
-            font-size: 18px;
-        }
+  .news-content { flex: 1; padding-right: 15px; }
+  
+  .news-date {
+    font-size: 11px;
+    color: #d32f2f; /* Red for Date */
+    font-weight: 700;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 
-        .notice h3 a {
-            color: #003c8f;
-            text-decoration: none;
-        }
+  .news-title { 
+    font-size: 14px; 
+    line-height: 1.4; 
+    font-weight: 500; 
+    color: #000;
+  }
+  
+  .download-btn {
+    background: #003366;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
 
-        .notice h3 a:hover {
-            text-decoration: underline;
-        }
+  /* --- 3. SKELETON LOADING (GHOST EFFECT) --- */
+  /* This shows while data is loading so it looks "fixed" in HTML */
+  .skeleton-wrapper { display: block; }
+  
+  .skeleton {
+    background: #fff;
+    border: 1px solid #eee;
+    border-left: 5px solid #ddd;
+    border-radius: 4px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .sk-text { flex: 1; }
+  .sk-line { height: 10px; background: #eee; margin-bottom: 6px; width: 70%; border-radius: 2px; }
+  .sk-line.short { width: 30%; height: 8px; margin-bottom: 8px; }
+  .sk-btn { width: 60px; height: 25px; background: #eee; border-radius: 4px; }
 
-        .notice p {
-            margin: 4px 0;
-            font-size: 14px;
-            color: #555;
-        }
+  /* Animation for loading */
+  @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+  .skeleton { animation: pulse 1.5s infinite ease-in-out; }
 
-        .loading, .error {
-            text-align: center;
-            font-size: 16px;
-            margin-top: 30px;
-        }
-
-        footer {
-            background: #e0e0e0;
-            text-align: center;
-            padding: 10px;
-            margin-top: 40px;
-            font-size: 14px;
-        }
-    </style>
+</style>
 </head>
 <body>
 
-<header>
-    <h1>CCS University Notices</h1>
-</header>
+<div class="feed-header">
+  <span>📝 Latest Notices</span>
+  <span id="status" class="badge">Updating...</span>
+</div>
 
-<main>
-    <div id="container" class="loading">
-        Loading notices...
-    </div>
-</main>
+<div id="skeleton-box" class="skeleton-wrapper">
+  <div class="skeleton"><div class="sk-text"><div class="sk-line short"></div><div class="sk-line"></div></div><div class="sk-btn"></div></div>
+  <div class="skeleton"><div class="sk-text"><div class="sk-line short"></div><div class="sk-line"></div></div><div class="sk-btn"></div></div>
+  <div class="skeleton"><div class="sk-text"><div class="sk-line short"></div><div class="sk-line"></div></div><div class="sk-btn"></div></div>
+  <div class="skeleton"><div class="sk-text"><div class="sk-line short"></div><div class="sk-line"></div></div><div class="sk-btn"></div></div>
+</div>
 
-<footer>
-    Powered by CCS University API
-</footer>
+<div id="news-feed" class="news-container"></div>
 
 <script>
-    const container = document.getElementById("container");
+  // ============================================
+  //  👇 PASTE YOUR API URL INSIDE THE QUOTES 👇
+  // ============================================
+  const API_URL = 'https://api.ccsuniversity.ac.in/news/search?title=&id=Notice&month=&year=&page=1'; 
+  // ============================================
 
-    const API_URL =
-        "https://api.allorigins.win/raw?url=" +
-        encodeURIComponent(
-            "https://api.ccsuniversity.ac.in/news/search?title=&id=Notice&month=&year=&page=1"
-        );
+  const feedContainer = document.getElementById('news-feed');
+  const skeletonBox = document.getElementById('skeleton-box');
+  const statusBadge = document.getElementById('status');
 
-    async function loadNotices() {
-        try {
-            const response = await fetch(API_URL);
+  function formatDate(isoString) {
+    if (!isoString) return '';
+    const date = new Date(isoString);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
 
-            if (!response.ok) {
-                throw new Error("Network error");
-            }
+  async function loadData() {
+    try {
+      // We add '?t=' + timestamp to the URL.
+      // This forces the browser to think it is a NEW request every time.
+      // It ensures NO CACHE is used.
+      const noCacheUrl = API_URL + (API_URL.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
 
-            const data = await response.json();
-            const notices = data.news;
+      const response = await fetch(noCacheUrl);
+      if (!response.ok) throw new Error("Server Error");
 
-            if (!notices || notices.length === 0) {
-                container.innerHTML =
-                    "<p class='error'>No notices found.</p>";
-                return;
-            }
+      const data = await response.json();
+      const newsList = data.news;
 
-            container.innerHTML = "";
+      // Clear Skeleton
+      skeletonBox.style.display = 'none';
 
-            notices.forEach(n => {
-                const div = document.createElement("div");
-                div.className = "notice";
+      if (!newsList || newsList.length === 0) {
+        feedContainer.innerHTML = '<div style="padding:10px;">No notices found.</div>';
+        return;
+      }
 
-                div.innerHTML = `
-                    <h3>
-                        <a href="${n.url}" target="_blank" rel="noopener">
-                            ${n.title}
-                        </a>
-                    </h3>
-                    <p>📅 ${new Date(n.created_at).toLocaleDateString()}</p>
-                `;
+      // Render Items
+      newsList.forEach(item => {
+        const card = document.createElement('a');
+        card.className = 'news-card';
+        card.href = item.url;
+        card.target = '_blank'; // Opens in new tab
 
-                container.appendChild(div);
-            });
+        const dateStr = formatDate(item.created_at);
 
-        } catch (err) {
-            container.innerHTML =
-                "<p class='error'>Failed to load notices.</p>";
-            console.error(err);
-        }
+        card.innerHTML = `
+          <div class="news-content">
+            <div class="news-date">📅 ${dateStr}</div>
+            <div class="news-title">${item.title}</div>
+          </div>
+          <div class="download-btn">OPEN PDF</div>
+        `;
+        
+        feedContainer.appendChild(card);
+      });
+
+      // Update Badge
+      statusBadge.innerText = "Live Feed";
+      statusBadge.style.background = "#e6fffa";
+      statusBadge.style.color = "#006666";
+
+    } catch (error) {
+      console.error(error);
+      skeletonBox.style.display = 'none';
+      feedContainer.innerHTML = `<div style="color:red; padding:10px; border:1px solid red; background:#fff5f5;">
+        <strong>Connection Failed</strong><br>
+        Could not load API.
+      </div>`;
     }
+  }
 
-    loadNotices();
+  // Run immediately
+  loadData();
+
 </script>
 
 </body>

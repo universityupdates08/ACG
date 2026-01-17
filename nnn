@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preconnect" href="https://api.ccsuniversity.ac.in">
+
+<style>
+  /* --- 1. BASE STYLES --- */
+  body { 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+    background: #ffffff; 
+    padding: 10px; 
+    margin: 0; 
+  }
+
+  /* Header */
+  .feed-header {
+    border-bottom: 2px solid #003366;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    color: #003366;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Status Badge */
+  .badge {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: #f0f0f0;
+    color: #666;
+    font-weight: normal;
+  }
+
+  /* --- 2. NEWS CARD STYLES --- */
+  .news-container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; /* Reduced gap slightly for compact view */
+  }
+   
+  .news-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Vertically center content */
+    background: #f8f9fa;
+    border-left: 5px solid #003366;
+    padding: 15px; /* Increased padding slightly since date is gone */
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.1s linear; /* Faster transition */
+    border: 1px solid #eee;
+  }
+
+  .news-card:hover { 
+    background: #e9ecef; 
+  }
+
+  .news-content { flex: 1; padding-right: 15px; }
+   
+  .news-title { 
+    font-size: 14px; 
+    line-height: 1.4; 
+    font-weight: 500; 
+    color: #000;
+  }
+   
+  .download-btn {
+    background: #003366;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+
+  /* --- 3. SKELETON LOADING (Optimized) --- */
+  .skeleton-wrapper { display: block; }
+   
+  .skeleton {
+    background: #fff;
+    border: 1px solid #eee;
+    border-left: 5px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+   
+  .sk-text { flex: 1; }
+  /* Removed the short line for date, kept only title line */
+  .sk-line { height: 14px; background: #eee; width: 80%; border-radius: 2px; }
+  .sk-btn { width: 60px; height: 28px; background: #eee; border-radius: 4px; }
+
+  @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+  .skeleton { animation: pulse 1s infinite ease-in-out; } /* Faster pulse */
+
+</style>
+</head>
+<body>
+
+<div class="feed-header">
+  <span>📝 Latest Notices</span>
+  <span id="status" class="badge">Updating...</span>
+</div>
+
+<div id="skeleton-box" class="skeleton-wrapper">
+  <div class="skeleton"><div class="sk-text"><div class="sk-line"></div></div><div class="sk-btn"></div></div>
+  <div class="skeleton"><div class="sk-text"><div class="sk-line"></div></div><div class="sk-btn"></div></div>
+  <div class="skeleton"><div class="sk-text"><div class="sk-line"></div></div><div class="sk-btn"></div></div>
+  <div class="skeleton"><div class="sk-text"><div class="sk-line"></div></div><div class="sk-btn"></div></div>
+</div>
+
+<div id="news-feed" class="news-container"></div>
+
+<script>
+  // ============================================
+  const API_URL = 'https://api.ccsuniversity.ac.in/news/search?title=&id=Notice&month=&year=&page=1'; 
+  // ============================================
+
+  const feedContainer = document.getElementById('news-feed');
+  const skeletonBox = document.getElementById('skeleton-box');
+  const statusBadge = document.getElementById('status');
+
+  async function loadData() {
+    try {
+      // Keep cache busting for fresh results
+      const noCacheUrl = API_URL + (API_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
+
+      const response = await fetch(noCacheUrl);
+      if (!response.ok) throw new Error("Server Error");
+
+      const data = await response.json();
+      const newsList = data.news;
+
+      // 1. Hide Skeleton immediately
+      skeletonBox.style.display = 'none';
+
+      if (!newsList || newsList.length === 0) {
+        feedContainer.innerHTML = '<div style="padding:10px;">No notices found.</div>';
+        return;
+      }
+
+      // 🚀 SPEED BOOST: Use DocumentFragment
+      // This prevents the page from re-rendering 20 times. It renders once.
+      const fragment = document.createDocumentFragment();
+
+      newsList.forEach(item => {
+        const card = document.createElement('a');
+        card.className = 'news-card';
+        card.href = item.url;
+        card.target = '_blank';
+
+        // Removed the Date HTML block
+        card.innerHTML = `
+          <div class="news-content">
+            <div class="news-title">${item.title}</div>
+          </div>
+          <div class="download-btn">OPEN PDF</div>
+        `;
+        
+        fragment.appendChild(card);
+      });
+
+      // Append everything at once
+      feedContainer.appendChild(fragment);
+
+      // Update Badge
+      statusBadge.innerText = "Live";
+      statusBadge.style.background = "#e6fffa";
+      statusBadge.style.color = "#006666";
+
+    } catch (error) {
+      console.error(error);
+      skeletonBox.style.display = 'none';
+      feedContainer.innerHTML = `<div style="color:red; padding:10px; background:#fff5f5;">
+        <strong>Offline</strong>
+      </div>`;
+      statusBadge.innerText = "Error";
+    }
+  }
+
+  // Run immediately
+  loadData();
+
+</script>
+
+</body>
+</html>

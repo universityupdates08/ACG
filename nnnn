@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Latest Notices</title>
+
+<style>
+/* --- BASE --- */
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #fff;
+  padding: 10px;
+  margin: 0;
+}
+
+/* Header */
+.feed-header {
+  border-bottom: 2px solid #003366;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  color: #003366;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Badge */
+.badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #f0f0f0;
+  color: #666;
+}
+
+/* News Cards */
+.news-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.news-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  border-left: 5px solid #003366;
+  padding: 12px 15px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #000;
+  border: 1px solid #eee;
+}
+
+.news-card:hover {
+  background: #e9ecef;
+}
+
+.news-title {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* Button */
+.download-btn {
+  background: #003366;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Skeleton (lighter & faster) */
+.skeleton {
+  background: #fff;
+  border: 1px solid #eee;
+  border-left: 5px solid #ddd;
+  border-radius: 4px;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+}
+
+.sk-line {
+  height: 10px;
+  background: #eee;
+  width: 70%;
+  border-radius: 2px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="feed-header">
+  <span>📝 Latest Notices</span>
+  <span id="status" class="badge">Loading…</span>
+</div>
+
+<div id="skeleton-box">
+  <div class="skeleton"><div class="sk-line"></div></div>
+  <div class="skeleton"><div class="sk-line"></div></div>
+  <div class="skeleton"><div class="sk-line"></div></div>
+</div>
+
+<div id="news-feed" class="news-container"></div>
+
+<script>
+const API_URL = 'https://api.ccsuniversity.ac.in/news/search?';
+
+const feedContainer = document.getElementById('news-feed');
+const skeletonBox = document.getElementById('skeleton-box');
+const statusBadge = document.getElementById('status');
+
+async function loadData() {
+  try {
+    const response = await fetch(API_URL, { cache: "no-store" });
+    if (!response.ok) throw new Error("API error");
+
+    const data = await response.json();
+    const newsList = data.news || [];
+
+    skeletonBox.style.display = 'none';
+
+    if (newsList.length === 0) {
+      feedContainer.textContent = "No notices found.";
+      return;
+    }
+
+    // Faster rendering
+    const fragment = document.createDocumentFragment();
+
+    newsList.forEach(item => {
+      const card = document.createElement('a');
+      card.className = 'news-card';
+      card.href = item.url;
+      card.target = '_blank';
+      card.rel = 'noopener';
+
+      card.innerHTML = `
+        <div class="news-title">${item.title}</div>
+        <div class="download-btn">OPEN PDF</div>
+      `;
+
+      fragment.appendChild(card);
+    });
+
+    feedContainer.appendChild(fragment);
+
+    statusBadge.textContent = "Live Feed";
+    statusBadge.style.background = "#e6fffa";
+    statusBadge.style.color = "#006666";
+
+  } catch (err) {
+    skeletonBox.style.display = 'none';
+    feedContainer.innerHTML = `
+      <div style="color:red; padding:10px; border:1px solid red;">
+        Failed to load notices.
+      </div>
+    `;
+  }
+}
+
+loadData();
+</script>
+
+</body>
+</html>

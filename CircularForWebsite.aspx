@@ -1,0 +1,272 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+
+</title><link href="https://erp.aktu.ac.in/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" /><link href="https://erp.aktu.ac.in/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet" /><link href="https://erp.aktu.ac.in/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://erp.aktu.ac.in/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="https://erp.aktu.ac.in/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://erp.aktu.ac.in/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="https://erp.aktu.ac.in/dist/js/sb-admin-2.js"></script>
+    <script src="https://erp.aktu.ac.in/WebPagesJS/PopUp/ERPPopUp.js"></script>
+    <script src="https://erp.aktu.ac.in/WebPagesJS/Validations/validations.js"></script>
+
+    <link href="https://erp.aktu.ac.in/Webpages/Public/Circular/dist/css/bootstrap-material-design.css" rel="stylesheet" /><link href="https://erp.aktu.ac.in/Webpages/Public/Circular/dist/css/ripples.min.css" rel="stylesheet" /><link href="https://erp.aktu.ac.in/Webpages/Public/Circular/dist/css/sb-admin-2.css" rel="stylesheet" />
+    <script type="text/javascript" language="javascript">
+        $(function () {
+            $("#accordion").accordion({
+                collapsible: true,
+                autoHeight: false
+            });
+        });
+
+        $(function () {
+            $("#tabs").tabs({
+                event: 'mouseover'
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <form method="post" action="./CircularForWebsite.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTQ2NTMyMTQzOA9kFgICAw9kFgICAQ9kFgQCBQ8QZGQWAWZkAg0PPCsAEQMADxYEHgtfIURhdGFCb3VuZGceC18hSXRlbUNvdW50AoY4ZAEQFgAWABYADBQrAAAWAmYPZBY0AgEPZBYEAgEPZBYCZg8PFgQeBFRleHQFNVJlZ2FyZGluZyBFbnJvbG1lbnQgZm9ybSBWZXJpZmljYXRpb24gU2Vzc2lvbiAyMDI1LTI2HgtOYXZpZ2F0ZVVybAVHaHR0cDovL2Ztcy5ha3R1LmFjLmluL1Jlc291cmNlcy9BdHRhY2htZW50cy9DaXJjdWxhci8yMDk0NjFwNW1ud2JwcS5wZGZkZAIDDw8WAh8CBQoxOS0wMS0yMDI2ZGQCAg9kFgQCAQ9kFgJmDw8WBB8CBcQBUmVnYXJkaW5nIGNvbXBsaWFuY2Ugb2Ygb3JkZXJzICBwYXNzZWQgYnkgdGhlIEhvbidibGUgU3VwcmVtZSBDb3VydCBpbiBTdW8tTW90byBXcml0IFBldGl0aW9uIChDaXZpbCkgTm8uIDUvMjAyNSAiQ2l0eSBIb3VuZCBieSBTdHJheSBLaWRzIFBheSBQcmljZSIgdnMuIG90aGVycyBmaWxlZCBpbiB0aGUgSG9uJ2JsZSBTdXByZW1lIENvdXJ0Lh8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQ2M2tvamsxZWY0LnBkZmRkAgMPDxYCHwIFCjE5LTAxLTIwMjZkZAIDD2QWBAIBD2QWAmYPDxYEHwIFUENhbGwgZm9yIE5vbWluYXRpb25zOiBBSSBTdGFydHVwIFNob3djYXNpbmcgYXQgQUkgTWFudGhhbiAyMDI2IChTZWxlY3Rpb24tQmFzZWQpHwMFR2h0dHA6Ly9mbXMuYWt0dS5hYy5pbi9SZXNvdXJjZXMvQXR0YWNobWVudHMvQ2lyY3VsYXIvMjA5NDY1bjF4MDBrdWwucGRmZGQCAw8PFgIfAgUKMTktMDEtMjAyNmRkAgQPZBYEAgEPZBYCZg8PFgQfAgVSQ2FsbCBmb3IgUmVzZWFyY2ggUHJvcG9zYWxzOiBJU1JPIFJFU1BPTkQgQmFza2V0IDIwMjUgZm9yIEFLVFUgQWZmaWxpYXRlZCBDb2xsZWdlcx8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQ2MGhvd2IyMWd2LnBkZmRkAgMPDxYCHwIFCjE4LTAxLTIwMjZkZAIFD2QWBAIBD2QWAmYPDxYEHwIF6QFSZWdhcmRpbmcgVmlydHVhbCBJbnRlcm5zaGlwIChJbmR1c3RyeS1FbmRvcnNlZHxQcm9qZWN0LUJhc2VkfCBTdGlwZW5kIE9wcG9ydHVuaXRpZXMpIHByb2dyYW0gb2YgNjAgaG91cnMgZHVyYXRpb24gdGhyb3VnaCBPbmxpbmUgbW9kZSBvZmZlcmluZyBieSBJQk0gd2l0aCBhIGdsb2JhbGx5IHJlY29nbml6ZWQgSUJNIENlcnRpZmljYXRlIGZvciBhbGwgQi5UZWNoL00uVGVjaC9NQ0EvTUJBIHN0dWRlbnRzLh8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQ1MGZmaHM1a2xuLnBkZmRkAgMPDxYCHwIFCjE3LTAxLTIwMjZkZAIGD2QWBAIBD2QWAmYPDxYEHwIF8QFSZWdhcmRpbmcg4oCcSUJNIENvbnN1bHRpbmfigJ0gQ0lDIEhpcmluZyBmb3IgYmF0Y2ggMjAyNiBCLlRlY2ggLSBDb21wdXRlciBTY2llbmNlL0luZm9ybWF0aW9uIFNjaWVuY2UgYW5kIEluZm9ybWF0aW9uIFRlY2hub2xvZ3kgcmVsYXRlZCBicmFuY2hlcyB3aXRoIDYgQ0dQQS82MCUgIGZvciB0aGUgcG9zaXRpb24gb2YgIOKAnEFzc29jaWF0ZSBTeXN0ZW0gRW5naW5lZXLigJ0gb25seSBmb3IgRkVNQUxFIHN0dWRlbnRzHwMFR2h0dHA6Ly9mbXMuYWt0dS5hYy5pbi9SZXNvdXJjZXMvQXR0YWNobWVudHMvQ2lyY3VsYXIvMjA5NDUxMnVnbWdpcncucGRmZGQCAw8PFgIfAgUKMTctMDEtMjAyNmRkAgcPZBYEAgEPZBYCZg8PFgQfAgV+UmVnYXJkaW5nIHRoZSBEZWNsYXJhdGlvbiBvZiBSZXN1bHRzIG9mIHRoZSBPZGQgU2VtZXN0ZXIgRXhhbWluYXRpb24gU2Vzc2lvbiAyMDI14oCTMjYgZm9yIFJlZ3VsYXIgU3R1ZGVudHMgb2YgQkZBIEZpbmFsIFllYXIuHwMFR2h0dHA6Ly9mbXMuYWt0dS5hYy5pbi9SZXNvdXJjZXMvQXR0YWNobWVudHMvQ2lyY3VsYXIvMjA5NDUzcW9hd3N0dWwucGRmZGQCAw8PFgIfAgUKMTctMDEtMjAyNmRkAggPZBYEAgEPZBYCZg8PFgQfAgWvAVJlZ2FyZGluZyB0aGUgU3VibWlzc2lvbiBvZiB0aGUgRGlnaXRhbCBUYWJ1bGF0aW9uIFJlZ2lzdGVyIG9mIEludGVybmFsIE1hcmtzIG9mIFJlZ3VsYXIgU3R1ZGVudHMgb2YgdGhlIEIuUGhhcm0gUHJvZ3JhbW1lIGZvciB0aGUgT2RkIFNlbWVzdGVyIEV4YW1pbmF0aW9uLCBTZXNzaW9uIDIwMjXigJMyNi4fAwVHaHR0cDovL2Ztcy5ha3R1LmFjLmluL1Jlc291cmNlcy9BdHRhY2htZW50cy9DaXJjdWxhci8yMDk0NTZmMW9qaWkwMC5wZGZkZAIDDw8WAh8CBQoxNy0wMS0yMDI2ZGQCCQ9kFgQCAQ9kFgJmDw8WBB8CBdYBUmVnYXJkaW5nIHRoZSBFeHRlbnNpb24gb2YgdGhlIERhdGUgZm9yIENvbXBsZXRpbmcgdGhlIFByYWN0aWNhbCBFeGFtaW5hdGlvbnMgb2YgUmVndWxhciBhbmQgQ2Fycnktb3ZlciBTdWJqZWN0cyBvZiBTdHVkZW50cyBTdHVkeWluZyBpbiB0aGUgT2RkIFNlbWVzdGVyIFNlc3Npb24gMjAyNS0yNiBhbmQgZm9yIFVwbG9hZGluZyB0aGUgT2J0YWluZWQgTWFya3MgT25saW5lLh8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQ1N3dicmJtYmFqLnBkZmRkAgMPDxYCHwIFCjE3LTAxLTIwMjZkZAIKD2QWBAIBD2QWAmYPDxYEHwIFOlJlZ2FyZGluZyBEaWdpdGFsIEV2YWx1YXRpb24gT2RkIFNlbWVzdGVyIFNlc3Npb24gMjAyNS0yNi4fAwVHaHR0cDovL2Ztcy5ha3R1LmFjLmluL1Jlc291cmNlcy9BdHRhY2htZW50cy9DaXJjdWxhci8yMDk0NTh3dm1xaTQ0cy5wZGZkZAIDDw8WAh8CBQoxNy0wMS0yMDI2ZGQCCw9kFgQCAQ9kFgJmDw8WBB8CBSBUaHJlZSBEYXkgRkRQIEphbiAyOSB0byAzMSwgMjAyNh8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQ0M3lranQzdWhvLnBkZmRkAgMPDxYCHwIFCjE0LTAxLTIwMjZkZAIMD2QWBAIBD2QWAmYPDxYEHwIFTFJlZ2FyZGluZyBSZXNjaGVkdWxpbmcgT2RkIFNlbWVzdGVyIEV4YW1pbmF0aW9uIFNlc3Npb24gMjAyNC0yNS4oMTUuMDEuMjAyNikfAwVHaHR0cDovL2Ztcy5ha3R1LmFjLmluL1Jlc291cmNlcy9BdHRhY2htZW50cy9DaXJjdWxhci8yMDk0NDZ6bmhydm1kdS5wZGZkZAIDDw8WAh8CBQoxNC0wMS0yMDI2ZGQCDQ9kFgQCAQ9kFgJmDw8WBB8CBcsBUmVnYXJkaW5nIEJyaW5naW5nIEVmZmljaWVuY3kgYW5kIE1vbWVudHVtIHRvIHRoZSBFdmFsdWF0aW9uIFdvcmsgYnkgTm9taW5hdGluZyBUZWFjaGVycyB0byBQcm92aWRlIGZ1bGwgQ29vcGVyYXRpb24gaW4gdGhlIERpZ2l0YWwgRXZhbHVhdGlvbiBvZiBBbnN3ZXIgU2NyaXB0cyBmb3IgdGhlIE9kZCBTZW1lc3RlciBvZiBTZXNzaW9uIDIwMjXigJMyNi4fAwVHaHR0cDovL2Ztcy5ha3R1LmFjLmluL1Jlc291cmNlcy9BdHRhY2htZW50cy9DaXJjdWxhci8yMDk0NDcwdWhkYnYxbS5wZGZkZAIDDw8WAh8CBQoxMy0wMS0yMDI2ZGQCDg9kFgQCAQ9kFgJmDw8WBB8CBYkBUmVnYXJkaW5nIGFtZW5kbWVudCBpbiB0aGUgUnVsZXMtMjAyMyBvZiBVdHRhciBQcmFkZXNoIFNjaGVkdWxlZCBDYXN0ZS9TY2hlZHVsZWQgVHJpYmUgYW5kIEdlbmVyYWwgQ2F0ZWdvcnkgUG9zdC0xMHRoIFNjaG9sYXJzaGlwIFNjaGVtZS4fAwVHaHR0cDovL2Ztcy5ha3R1LmFjLmluL1Jlc291cmNlcy9BdHRhY2htZW50cy9DaXJjdWxhci8yMDk0Mzh2YnZ2aXB6cS5wZGZkZAIDDw8WAh8CBQoxMi0wMS0yMDI2ZGQCDw9kFgQCAQ9kFgJmDw8WBB8CBUZSZWdhcmRpbmcgZGF0ZSBleHRlbnNpb24gb2Ygb25saW5lIGFwcGxpY2F0aW9uIGZvciBBZmZpbGlhdGlvbiAyMDI2LTI3HwMFR2h0dHA6Ly9mbXMuYWt0dS5hYy5pbi9SZXNvdXJjZXMvQXR0YWNobWVudHMvQ2lyY3VsYXIvMjA5NDM2Y21jYTJ6dHcucGRmZGQCAw8PFgIfAgUKMTEtMDEtMjAyNmRkAhAPZBYEAgEPZBYCZg8PFgQfAgV3UmVnYXJkaW5nIG9yZ2FuaXppbmcgdGhlIOKAnFJ1biBmb3IgU3dhZGVzaGkgKFN3YWRlc2hpIFNhbmthbHAgUnVuKeKAnSBwcm9ncmFtIG9uIE5hdGlvbmFsIFlvdXRoIERheSAoSmFudWFyeSAxMiwgMjAyNikfAwVHaHR0cDovL2Ztcy5ha3R1LmFjLmluL1Jlc291cmNlcy9BdHRhY2htZW50cy9DaXJjdWxhci8yMDk0Mjl2bGdqM2V5My5wZGZkZAIDDw8WAh8CBQowOS0wMS0yMDI2ZGQCEQ9kFgQCAQ9kFgJmDw8WBB8CBe4BUmVnYXJkaW5nIG9ubGluZSB2ZXJpZmljYXRpb24gb2YgdGhlIGF1dGhlbnRpY2l0eSBvZiB0aGUgYWN0dWFsIHN0dWRlbnQgc3RyZW5ndGggZXRjLiBvZiBnb3Zlcm5tZW50L3NlbGYtZmluYW5jZWQgaW5zdGl0dXRpb25zIGFmZmlsaWF0ZWQgdG8gdGhlIHVuaXZlcnNpdHkgZm9yIHBvc3QtbWF0cmljIHNjaG9sYXJzaGlwIGFuZCBmZWUgcmVpbWJ1cnNlbWVudCBpbiB0aGUgYWNhZGVtaWMgc2Vzc2lvbiAyMDI1LTI2Lh8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQzMGV2dm5ranBhLnBkZmRkAgMPDxYCHwIFCjA5LTAxLTIwMjZkZAISD2QWBAIBD2QWAmYPDxYEHwIFZ0VzdGFibGlzaG1lbnQgb2YgU1dBWUFNLU5QVEVMIExvY2FsIENoYXB0ZXIgZm9yIEVmZmVjdGl2ZSBJbXBsZW1lbnRhdGlvbiBvZiBNT09DcyBpbiBCLlRlY2guIFByb2dyYW1tZXMfAwVHaHR0cDovL2Ztcy5ha3R1LmFjLmluL1Jlc291cmNlcy9BdHRhY2htZW50cy9DaXJjdWxhci8yMDk0MzFmYXlpM3dnMC5wZGZkZAIDDw8WAh8CBQowOS0wMS0yMDI2ZGQCEw9kFgQCAQ9kFgJmDw8WBB8CBWRJbnZpdGF0aW9uIHRvIFBhcnRpY2lwYXRlIGluIEluZGlhbiBBcm154oCZcyBDb21wZW5kaXVtIG9mIFByb2JsZW0gRGVmaW5pdGlvbiBTdGF0ZW1lbnRzIChDUERTKSAyMDI1HwMFR2h0dHA6Ly9mbXMuYWt0dS5hYy5pbi9SZXNvdXJjZXMvQXR0YWNobWVudHMvQ2lyY3VsYXIvMjA5NDI1djIwczRud2wucGRmZGQCAw8PFgIfAgUKMDctMDEtMjAyNmRkAhQPZBYEAgEPZBYCZg8PFgQfAgVsSW52aXRhdGlvbiBmb3IgdmFsdWFibGUgdmlld3Mvc3VnZ2VzdGlvbnMgb24gdGhlIFByb3Bvc2VkIFVHIE1pbm9yIERlZ3JlZSBQcm9ncmFtIGluIOKAnFNwYWNlIFRlY2hub2xvZ3ku4oCdHwMFR2h0dHA6Ly9mbXMuYWt0dS5hYy5pbi9SZXNvdXJjZXMvQXR0YWNobWVudHMvQ2lyY3VsYXIvMjA5NDI3a2Izd3hxYjAucGRmZGQCAw8PFgIfAgUKMDctMDEtMjAyNmRkAhUPZBYEAgEPZBYCZg8PFgQfAgVaUmVnYXJkaW5nIEFJIFByYWd5YW46IEZhY3VsdHkgRGV2ZWxvcG1lbnQgUHJvZ3JhbSBpbiBjb2xsYWJvcmF0aW9uIHdpdGggSUJNIGJ5IFNtYXJ0QnJpZGdlHwMFR2h0dHA6Ly9mbXMuYWt0dS5hYy5pbi9SZXNvdXJjZXMvQXR0YWNobWVudHMvQ2lyY3VsYXIvMjA5NDE2NHY0bGhmeWYucGRmZGQCAw8PFgIfAgUKMDYtMDEtMjAyNmRkAhYPZBYEAgEPZBYCZg8PFgQfAgVVUmVnYXJkaW5nIGNlbGVicmF0aW9uIG9mIEZvdW5kYXRpb24gRGF5IG9mIFV0dGFyIFByYWRlc2ggaW4gdW5pdmVyc2l0aWVzL2luc3RpdHV0aW9ucx8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQxNzJpb3JmMmE0LnBkZmRkAgMPDxYCHwIFCjA2LTAxLTIwMjZkZAIXD2QWBAIBD2QWAmYPDxYEHwIF4wFSZWdhcmRpbmcgY29tcGxpYW5jZSBvZiBvcmRlcnMgZGF0ZWQgMjIuMDguMjAyNSBhbmQgMDcuMTEuMjAyNSBwYXNzZWQgYnkgdGhlIEhvbidibGUgU3VwcmVtZSBDb3VydCBpbiBTdW8tTW90byBXcml0IFBldGl0aW9uIChDaXZpbCkgTm8uIDUvMjAyNSAiQ2l0eSBIb3VuZCBieSBTdHJheSBLaWRzIFBheSBQcmljZSIgdnMuIG90aGVycyBmaWxlZCBpbiB0aGUgSG9uJ2JsZSBTdXByZW1lIENvdXJ0Lh8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQxMWkwbmtyZTFpLnBkZmRkAgMPDxYCHwIFCjA1LTAxLTIwMjZkZAIYD2QWBAIBD2QWAmYPDxYEHwIFiQFSZWdhcmRpbmcgZXh0ZW5zaW9uIG9mIGRhdGUgZm9yIGZpbGxpbmcgb2YgRW5yb2xtZW50IGFuZCBleGFtaW5hdGlvbiBmb3JtcyBvZiBzdHVkZW50cyBhZG1pdHRlZCBpbiB0aGUgaW5zdGl0dXRlcyBpbiB0aGUgc2Vzc2lvbiAyMDI1LTI2Lh8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQwOGFvdjVvY3kzLnBkZmRkAgMPDxYCHwIFCjAyLTAxLTIwMjZkZAIZD2QWBAIBD2QWAmYPDxYEHwIFxQFSZWdhcmRpbmcg4oCcQWRlY2NvIEdyb3Vw4oCdIFBhaWQgU29mdHdhcmUgRW5naW5lZXIgSW50ZXJuc2hpcCAoVHdvIG1vbnRocykgZm9sbG93ZWQgd2l0aCBGdWxsIHRpbWUgb24gdGhlIGJhc2lzIG9mIHBlcmZvcm1hbmNlIGhpcmluZyBvcHBvcnR1bml0eSBmb3IgQi5UZWNoKENTL0lUKSBmcm9tIDIwMjUvMjAyNiBwYXNzaW5nIG91dCBiYXRjaB8DBUdodHRwOi8vZm1zLmFrdHUuYWMuaW4vUmVzb3VyY2VzL0F0dGFjaG1lbnRzL0NpcmN1bGFyLzIwOTQwOWVydTRzZHBnLnBkZmRkAgMPDxYCHwIFCjAyLTAxLTIwMjZkZAIaDw8WAh4HVmlzaWJsZWhkZBgBBQpncmRTdHVkZW50DzwrAAwBCAKfAmR6fETPFz5ejrZa0i9kKL5QJkaW+A==" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="7F6186AE" />
+</div>
+       
+            <div class="container">
+                <div class="row">
+                    <div id="divSearch" class="panel panel-primary">
+                        
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Search Circular</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lblTitle">Title (Keywords):</label>
+                                        <input name="txtTitle" type="text" id="txtTitle" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lblMonth">Month:</label>
+                                        <select name="ddlmonth" id="ddlmonth" class="form-control">
+	<option value="0">-Select-</option>
+	<option value="1">January</option>
+	<option value="2">February</option>
+	<option value="3">March</option>
+	<option value="4">April</option>
+	<option value="5">May</option>
+	<option value="6">June</option>
+	<option value="7">July</option>
+	<option value="8">August</option>
+	<option value="9">September</option>
+	<option value="10">October</option>
+	<option value="11">November</option>
+	<option value="12">December</option>
+
+</select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lblYear">Year:</label>
+                                        <select name="ddlYear" id="ddlYear" class="form-control">
+	<option selected="selected" value="0">-Select-</option>
+	<option value="2011">2011</option>
+	<option value="2012">2012</option>
+	<option value="2013">2013</option>
+	<option value="2014">2014</option>
+	<option value="2015">2015</option>
+	<option value="2016">2016</option>
+
+</select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lblYear">Related To:</label>
+                                        <select name="ddlRelated" id="ddlRelated" class="form-control">
+	<option value="">&#160;-Select-</option>
+	<option value="G">&#160;General</option>
+	<option value="E">&#160;Examinations</option>
+	<option value="R">&#160;Results</option>
+	<option value="RD">&#160;RDC</option>
+	<option value="EN">&#160;Enrollment</option>
+	<option value="FE">&#160;Fees</option>
+	<option value="S">&#160;Students</option>
+	<option value="F">&#160;Faculty</option>
+	<option value="P">&#160;Parents</option>
+	<option value="C">&#160;College</option>
+
+</select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="submit" name="btnSearch" value="Search" id="btnSearch" class=" btn-raised btn btn-danger" />
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="submit" name="btnReset" value="Reset" id="btnReset" class="btn-raised btn btn-info" />
+                                </div>
+                            </div>
+                            <div class="panel-body ">
+                                <div>
+	<table class="table table-bordered table-responsive" cellspacing="0" rules="all" border="1" id="grdStudent" style="border-collapse:collapse;">
+		<tr>
+			<th scope="col">&nbsp;</th><th align="left" scope="col">Title</th><th scope="col">Posted On</th>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209461p5mnwbpq.pdf" target="_blank">Regarding Enrolment form Verification Session 2025-26</a></td><td>19-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209463kojk1ef4.pdf" target="_blank">Regarding compliance of orders  passed by the Hon'ble Supreme Court in Suo-Moto Writ Petition (Civil) No. 5/2025 "City Hound by Stray Kids Pay Price" vs. others filed in the Hon'ble Supreme Court.</a></td><td>19-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209465n1x00kul.pdf" target="_blank">Call for Nominations: AI Startup Showcasing at AI Manthan 2026 (Selection-Based)</a></td><td>19-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209460howb21gv.pdf" target="_blank">Call for Research Proposals: ISRO RESPOND Basket 2025 for AKTU Affiliated Colleges</a></td><td>18-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209450ffhs5kln.pdf" target="_blank">Regarding Virtual Internship (Industry-Endorsed|Project-Based| Stipend Opportunities) program of 60 hours duration through Online mode offering by IBM with a globally recognized IBM Certificate for all B.Tech/M.Tech/MCA/MBA students.</a></td><td>17-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/2094512ugmgirw.pdf" target="_blank">Regarding “IBM Consulting” CIC Hiring for batch 2026 B.Tech - Computer Science/Information Science and Information Technology related branches with 6 CGPA/60%  for the position of  “Associate System Engineer” only for FEMALE students</a></td><td>17-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209453qoawstul.pdf" target="_blank">Regarding the Declaration of Results of the Odd Semester Examination Session 2025–26 for Regular Students of BFA Final Year.</a></td><td>17-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209456f1ojii00.pdf" target="_blank">Regarding the Submission of the Digital Tabulation Register of Internal Marks of Regular Students of the B.Pharm Programme for the Odd Semester Examination, Session 2025–26.</a></td><td>17-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209457wbrbmbaj.pdf" target="_blank">Regarding the Extension of the Date for Completing the Practical Examinations of Regular and Carry-over Subjects of Students Studying in the Odd Semester Session 2025-26 and for Uploading the Obtained Marks Online.</a></td><td>17-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209458wvmqi44s.pdf" target="_blank">Regarding Digital Evaluation Odd Semester Session 2025-26.</a></td><td>17-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209443ykjt3uho.pdf" target="_blank">Three Day FDP Jan 29 to 31, 2026</a></td><td>14-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209446znhrvmdu.pdf" target="_blank">Regarding Rescheduling Odd Semester Examination Session 2024-25.(15.01.2026)</a></td><td>14-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/2094470uhdbv1m.pdf" target="_blank">Regarding Bringing Efficiency and Momentum to the Evaluation Work by Nominating Teachers to Provide full Cooperation in the Digital Evaluation of Answer Scripts for the Odd Semester of Session 2025–26.</a></td><td>13-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209438vbvvipzq.pdf" target="_blank">Regarding amendment in the Rules-2023 of Uttar Pradesh Scheduled Caste/Scheduled Tribe and General Category Post-10th Scholarship Scheme.</a></td><td>12-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209436cmca2ztw.pdf" target="_blank">Regarding date extension of online application for Affiliation 2026-27</a></td><td>11-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209429vlgj3ey3.pdf" target="_blank">Regarding organizing the “Run for Swadeshi (Swadeshi Sankalp Run)” program on National Youth Day (January 12, 2026)</a></td><td>09-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209430evvnkjpa.pdf" target="_blank">Regarding online verification of the authenticity of the actual student strength etc. of government/self-financed institutions affiliated to the university for post-matric scholarship and fee reimbursement in the academic session 2025-26.</a></td><td>09-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209431fayi3wg0.pdf" target="_blank">Establishment of SWAYAM-NPTEL Local Chapter for Effective Implementation of MOOCs in B.Tech. Programmes</a></td><td>09-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209425v20s4nwl.pdf" target="_blank">Invitation to Participate in Indian Army’s Compendium of Problem Definition Statements (CPDS) 2025</a></td><td>07-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209427kb3wxqb0.pdf" target="_blank">Invitation for valuable views/suggestions on the Proposed UG Minor Degree Program in “Space Technology.”</a></td><td>07-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/2094164v4lhfyf.pdf" target="_blank">Regarding AI Pragyan: Faculty Development Program in collaboration with IBM by SmartBridge</a></td><td>06-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/2094172iorf2a4.pdf" target="_blank">Regarding celebration of Foundation Day of Uttar Pradesh in universities/institutions</a></td><td>06-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209411i0nkre1i.pdf" target="_blank">Regarding compliance of orders dated 22.08.2025 and 07.11.2025 passed by the Hon'ble Supreme Court in Suo-Moto Writ Petition (Civil) No. 5/2025 "City Hound by Stray Kids Pay Price" vs. others filed in the Hon'ble Supreme Court.</a></td><td>05-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209408aov5ocy3.pdf" target="_blank">Regarding extension of date for filling of Enrolment and examination forms of students admitted in the institutes in the session 2025-26.</a></td><td>02-01-2026</td>
+		</tr><tr>
+			<td>
+                                                <img src="../../../Images/Site/arrowimg.png" alt="" />
+                                            </td><td style="width:85%;"><a href="http://fms.aktu.ac.in/Resources/Attachments/Circular/209409eru4sdpg.pdf" target="_blank">Regarding “Adecco Group” Paid Software Engineer Internship (Two months) followed with Full time on the basis of performance hiring opportunity for B.Tech(CS/IT) from 2025/2026 passing out batch</a></td><td>02-01-2026</td>
+		</tr><tr>
+			<td colspan="3"><table>
+				<tr>
+					<td><span>1</span></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$2&#39;)">2</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$3&#39;)">3</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$4&#39;)">4</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$5&#39;)">5</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$6&#39;)">6</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$7&#39;)">7</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$8&#39;)">8</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$9&#39;)">9</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$10&#39;)">10</a></td><td><a href="javascript:__doPostBack(&#39;grdStudent&#39;,&#39;Page$11&#39;)">...</a></td>
+				</tr>
+			</table></td>
+		</tr>
+	</table>
+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
